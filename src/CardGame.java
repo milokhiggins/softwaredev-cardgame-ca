@@ -5,4 +5,11 @@
  * @author SN690024245, SN69********
  */
 public class CardGame {
+    /**
+     * Executable main method
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+
+    }
 }
