@@ -1,3 +1,5 @@
+package cardgame;
+
 /**
  * Card game class etc etc
  *
