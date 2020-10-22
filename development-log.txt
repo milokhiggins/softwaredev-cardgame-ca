@@ -1,1 +1,2 @@
-Date        Time        Driver (coder)      Navigator (reviewer)
+Date        Time       Duration  Driver (coder)      Navigator (reviewer)
+22/20/10    16:07      2 hours   Milo                Sarah
