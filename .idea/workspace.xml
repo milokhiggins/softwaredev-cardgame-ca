@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="145bcc63-4d22-416a-a24d-398b9fdb147b" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit4 &amp; Mockito" />
+        <option value="Arquillian JUnit Test Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1jN5Y0SrYTpD2WDsCUI5JKgI1wQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="Arquillian JUnit4" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.Arquillian JUnit4" value="" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="cardgame" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Testing" type="JUnit" factoryName="JUnit">
+      <module name="softwaredev-cardgame-ca-master" />
+      <useClassPathOnly />
+      <option name="PACKAGE_NAME" value="cardgame" />
+      <option name="MAIN_CLASS_NAME" value="cardgame.CardGameTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="145bcc63-4d22-416a-a24d-398b9fdb147b" name="Default Changelist" comment="" />
+      <created>1603631759829</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603631759829</updated>
+      <workItem from="1603631813421" duration="7770000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1943" y="-1" key="#Project_Structure" timestamp="1603639323963">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1943" y="-1" key="#Project_Structure/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639323963" />
+    <state x="-1933" y="6" key="#Unnamed" timestamp="1603638993330">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1933" y="6" key="#Unnamed/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603638993330" />
+    <state x="-2081" y="-5" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603640386672">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-2081" y="-5" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603640386672" />
+    <state x="-2196" y="232" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1603637624013">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-2196" y="232" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603637624013" />
+    <state x="-1859" y="50" key="FileChooserDialogImpl" timestamp="1603639788735">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1859" y="50" key="FileChooserDialogImpl/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639788735" />
+    <state x="-2055" y="-85" key="SettingsEditor" timestamp="1603639790001">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-2055" y="-85" key="SettingsEditor/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639790001" />
+    <state x="-1737" y="175" key="com.intellij.ide.util.TipDialog" timestamp="1603631813491">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1737" y="175" key="com.intellij.ide.util.TipDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603631813491" />
+    <state x="-1806" y="239" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1603639415435">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1806" y="239" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639415435" />
+    <state x="-1739" y="-38" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1603641779681">
+      <screen x="-2560" y="-219" width="2048" height="1112" />
+    </state>
+    <state x="-1739" y="-38" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603641779681" />
+  </component>
+</project>

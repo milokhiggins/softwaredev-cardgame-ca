@@ -1,5 +1,8 @@
 package cardgame;
 
+import java.util.Stack;
+
+
 /**
  * Card game class etc etc
  *
@@ -11,7 +14,11 @@ public class CardGame {
      * Executable main method
      * @param args command line arguments
      */
+
+    private int n;
+
     public static void main(String[] args) {
+        Stack<Card> pack = new Stack<Card>();
 
     }
     /**
@@ -38,8 +45,11 @@ public class CardGame {
      * @param cardReceivers array of decks/players
      *
      */
-    private static void roundRobinDeal(CardReceiver[] cardReceivers, Card[] pack) {
-
+    private static void roundRobinDeal(CardReceiver[] cardReceivers, Stack<Card> pack) {
+        for (int i=0; i<4; i++){
+            for(CardReceiver receiver : cardReceivers){
+                receiver.appendCard(pack.pop());
+            }
+        }
     }
-
 }

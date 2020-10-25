@@ -13,5 +13,5 @@ public interface CardReceiver {
      * Add a card to the receiver's internal store
      * @param card card to add
      */
-    void appendCard(Card card);
+    void appendCard(CardGame.Card card);
 }
