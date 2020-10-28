@@ -1,7 +1,7 @@
 package cardgame;
 
 import java.util.Stack;
-
+import java.util.Objects;
 
 /**
  * Card game class etc etc
@@ -10,17 +10,18 @@ import java.util.Stack;
  * @author SN690024245, SN680046138
  */
 public class CardGame {
+
+    private int n;
+
     /**
      * Executable main method
      * @param args command line arguments
      */
-
-    private int n;
-
     public static void main(String[] args) {
-        Stack<Card> pack = new Stack<Card>();
+        Stack<Card> pack = new Stack<>();
 
     }
+
     /**
      *
      */
@@ -36,6 +37,24 @@ public class CardGame {
          */
         public int getNumber() {
             return this.number;
+        }
+
+        /**
+         * Test equality with another object
+         * @param o Object to compare against
+         * @return true if the object is equal, false otherwise
+         */
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+            if (this.getClass() != o.getClass()) {
+                return false;
+            }
+            Card other = (Card) o;
+
+            return Objects.equals(this.number, other.getNumber());
         }
     }
 

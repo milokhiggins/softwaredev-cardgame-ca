@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="145bcc63-4d22-416a-a24d-398b9fdb147b" name="Default Changelist" comment="" />
+    <list default="true" id="ecffe664-6f58-45f2-9d39-b45358c2bb0d" name="Default Changelist" comment="created MockCardDeck, PlayerTest, implemented Player.appendCard tests and method, refactored CardGameTest to be DRY.&#10;modified various code to use CardDeckInterface.">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/softwaredev-cardgame-ca.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cardgame/CardDeckInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cardgame/MockCardDeck.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cardgame/PlayerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cardgame/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cards.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/softwaredev-cardgame-ca-master.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/softwaredev-cardgame-ca-master.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/development-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cardgame/CardDeck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cardgame/CardDeck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cardgame/CardGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cardgame/CardGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cardgame/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cardgame/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cardgame/CardGameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/cardgame/CardGameTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="209" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit4 &amp; Mockito" />
         <option value="Arquillian JUnit Test Class" />
+        <option value="JUnit4 &amp; Mockito" />
+        <option value="Class" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1jN5Y0SrYTpD2WDsCUI5JKgI1wQ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -27,6 +51,7 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="Arquillian JUnit4" />
@@ -43,7 +68,70 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.Testing">
+    <configuration name="CardGameTest.testRoundRobinDealDecks" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="softwaredev-cardgame-ca-master" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cardgame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cardgame" />
+      <option name="MAIN_CLASS_NAME" value="cardgame.CardGameTest" />
+      <option name="METHOD_NAME" value="testRoundRobinDealDecks" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardGameTest.testRoundRobinDealPack" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="softwaredev-cardgame-ca-master" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cardgame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cardgame" />
+      <option name="MAIN_CLASS_NAME" value="cardgame.CardGameTest" />
+      <option name="METHOD_NAME" value="testRoundRobinDealPack" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlayerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="softwaredev-cardgame-ca-master" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cardgame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cardgame" />
+      <option name="MAIN_CLASS_NAME" value="cardgame.PlayerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlayerTest.testAppendCard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="softwaredev-cardgame-ca-master" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cardgame.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cardgame" />
+      <option name="MAIN_CLASS_NAME" value="cardgame.PlayerTest" />
+      <option name="METHOD_NAME" value="testAppendCard" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Testing" type="JUnit" factoryName="JUnit">
       <module name="softwaredev-cardgame-ca-master" />
       <useClassPathOnly />
@@ -56,6 +144,61 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="softwaredev-cardgame-ca-master" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <module name="softwaredev-cardgame-ca-master" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.PlayerTest" />
+        <item itemvalue="JUnit.PlayerTest.testAppendCard" />
+        <item itemvalue="JUnit.CardGameTest.testRoundRobinDealPack" />
+        <item itemvalue="JUnit.CardGameTest.testRoundRobinDealDecks" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -74,6 +217,11 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added Util.java, refactored CardGameTest.java" />
+    <MESSAGE value="created MockCardDeck, PlayerTest, implemented Player.appendCard tests and method, refactored CardGameTest to be DRY.&#10;modified various code to use CardDeckInterface." />
+    <option name="LAST_COMMIT_MESSAGE" value="created MockCardDeck, PlayerTest, implemented Player.appendCard tests and method, refactored CardGameTest to be DRY.&#10;modified various code to use CardDeckInterface." />
+  </component>
   <component name="WindowStateProjectService">
     <state x="-1943" y="-1" key="#Project_Structure" timestamp="1603639323963">
       <screen x="-2560" y="-219" width="2048" height="1112" />
@@ -87,29 +235,70 @@
       <screen x="-2560" y="-219" width="2048" height="1112" />
     </state>
     <state x="-2081" y="-5" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603640386672" />
-    <state x="-2196" y="232" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1603637624013">
-      <screen x="-2560" y="-219" width="2048" height="1112" />
+    <state x="93" y="93" width="1350" height="638" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1603878971553">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="93" y="93" width="1350" height="638" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1536.824@0.0.1536.824" timestamp="1603878971553" />
+    <state x="574" y="122" key="#com.intellij.ide.util.MemberChooser" timestamp="1603881972199">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="574" y="122" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1603881972199" />
+    <state x="273" y="334" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1603876209941">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-2196" y="232" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603637624013" />
+    <state x="273" y="334" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1536.824@0.0.1536.824" timestamp="1603876209941" />
+    <state x="344" y="7" key="CommitChangelistDialog2" timestamp="1603887389262">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="344" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1603887389262" />
     <state x="-1859" y="50" key="FileChooserDialogImpl" timestamp="1603639788735">
       <screen x="-2560" y="-219" width="2048" height="1112" />
     </state>
     <state x="-1859" y="50" key="FileChooserDialogImpl/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639788735" />
-    <state x="-2055" y="-85" key="SettingsEditor" timestamp="1603639790001">
-      <screen x="-2560" y="-219" width="2048" height="1112" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1603887074064">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1603887074064" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1603887074064">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1603887074064" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1603887074064">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1603887074064" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1603887074064">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1603887074064" />
+    <state x="379" y="0" key="SettingsEditor" timestamp="1603877337096">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-2055" y="-85" key="SettingsEditor/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639790001" />
+    <state x="379" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1603877337096" />
     <state x="-1737" y="175" key="com.intellij.ide.util.TipDialog" timestamp="1603631813491">
       <screen x="-2560" y="-219" width="2048" height="1112" />
     </state>
     <state x="-1737" y="175" key="com.intellij.ide.util.TipDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603631813491" />
-    <state x="-1806" y="239" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1603639415435">
-      <screen x="-2560" y="-219" width="2048" height="1112" />
+    <state x="566" y="339" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1603876216496">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-1806" y="239" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603639415435" />
+    <state x="566" y="339" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1536.824@0.0.1536.824" timestamp="1603876216496" />
     <state x="-1739" y="-38" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1603641779681">
       <screen x="-2560" y="-219" width="2048" height="1112" />
     </state>
     <state x="-1739" y="-38" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1536.824/-2560.-219.2048.1112@-2560.-219.2048.1112" timestamp="1603641779681" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1603881332988">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1603881332988" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/softwaredev_cardgame_ca$Testing.ic" NAME="Testing Coverage Results" MODIFIED="1603877373157" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/softwaredev_cardgame_ca$CardGameTest_testRoundRobinDealDecks.ic" NAME="CardGameTest.testRoundRobinDealDecks Coverage Results" MODIFIED="1603877770901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cardgame.*</FILTER>
+    </SUITE>
   </component>
 </project>
