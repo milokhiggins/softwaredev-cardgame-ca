@@ -50,9 +50,28 @@ public class Player implements Runnable, CardReceiver {
 
     /**
      * Check if the player has won.
-     * @return true if the player has a winning hand; false otherwise
+     *
+     * If a player has four cards of the same denomination the have a winning
+     * hand.
+     * @return true if player has won the game, false otherwise.
      */
-    private boolean checkIfWon() {
-        return true;
+    private Boolean checkIfWon() {
+        if (favouredHand.size() == 4){
+            // Only cards of the same value are in the favoured hand.
+            // Having four cards in the favoured list must be a winning hand.
+            return true;
+            // Checks if all the cards in the unfavoured hand are the same.
+        } else if(unfavouredHand.size()==4) {
+            int value = unfavouredHand.get(0).getNumber();
+            for (CardGame.Card i : unfavouredHand) {
+                if (i.getNumber() != value) {
+                    return false;
+                }
+            }
+            return true;
+        // If both hands have less than four cards it is not possible to win.
+        } else {return false;}
     }
+
+
 }

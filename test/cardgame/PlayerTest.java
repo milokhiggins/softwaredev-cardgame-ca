@@ -3,12 +3,13 @@ package cardgame;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
+import static cardgame.Util.getResult;
 
 public class PlayerTest {
 
@@ -46,5 +47,64 @@ public class PlayerTest {
     @Test
     public void testAppendCardUnfavoured() throws Exception {
         genericAppendCardTest(3,"unfavouredHand");
+    }
+
+    @Test
+    public void testCheckIfWonFavouredWin() throws  Exception {
+        //get private field
+        Field favouredHand = player.getClass().getDeclaredField("favouredHand");
+        //hand is private; set accessible
+        favouredHand.setAccessible(true);
+        ArrayList<CardGame.Card> hand = new ArrayList<CardGame.Card>();
+        for (int i = 0; i < 4; i++) {
+            hand.add(new CardGame.Card (1));
+        }
+        favouredHand.set(player, hand);
+        assertTrue((Boolean) getResult(player, "checkIfWon"));
+    }
+
+    @Test
+    public void testCheckIfWonUnfavouredWin() throws  Exception {
+        //get private field
+        Field unfavouredHand = player.getClass().getDeclaredField("unfavouredHand");
+        //hand is private; set accessible
+        unfavouredHand.setAccessible(true);
+        ArrayList<CardGame.Card> hand = new ArrayList<CardGame.Card>();
+        for (int i = 0; i < 4; i++) {
+            hand.add(new CardGame.Card (3));
+        }
+        unfavouredHand.set(player, hand);
+        assertTrue((Boolean) getResult(player, "checkIfWon"));
+    }
+
+    @Test
+    public void testCheckIfWonFavouredLoss() throws  Exception {
+        //get private field
+        Field favouredHand = player.getClass().getDeclaredField("favouredHand");
+        //hand is private; set accessible
+        favouredHand.setAccessible(true);
+        ArrayList<CardGame.Card> hand = new ArrayList<CardGame.Card>();
+        for (int i = 0; i < 3; i++) {
+            hand.add(new CardGame.Card (1));
+        }
+        favouredHand.set(player, hand);
+        Boolean ifWon = (Boolean) getResult(player, "checkIfWon");
+        assertTrue(!ifWon);
+    }
+
+    @Test
+    public void testCheckIfWonUnfavouredLoss() throws  Exception {
+        //get private field
+        Field unfavouredHand = player.getClass().getDeclaredField("unfavouredHand");
+        //hand is private; set accessible
+        unfavouredHand.setAccessible(true);
+        ArrayList<CardGame.Card> hand = new ArrayList<CardGame.Card>();
+        for (int i = 0; i < 3; i++) {
+            hand.add(new CardGame.Card (3));
+        }
+        hand.add(new CardGame.Card (7));
+        unfavouredHand.set(player, hand);
+        Boolean ifWon = (Boolean) getResult(player, "checkIfWon");
+        assertTrue(!ifWon);
     }
 }
