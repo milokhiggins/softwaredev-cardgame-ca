@@ -18,7 +18,7 @@ public class Util {
         return null;
     }
 
-    public static Object getResult(Object object, String methodName, Object... args) throws InvocationTargetException, IllegalAccessException {
+    public static Object invokeMethod(Object object, String methodName, Object... args) throws InvocationTargetException, IllegalAccessException {
         Method method = getMethodByName(object.getClass(), methodName);
         method.setAccessible(true);
         return method.invoke(object, args);

@@ -4,12 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
-import static cardgame.Util.getResult;
+import static cardgame.Util.invokeMethod;
 
 public class PlayerTest {
 
@@ -60,7 +61,7 @@ public class PlayerTest {
             hand.add(new CardGame.Card (1));
         }
         favouredHand.set(player, hand);
-        assertTrue((Boolean) getResult(player, "checkIfWon"));
+        assertTrue((Boolean) invokeMethod(player, "checkIfWon"));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class PlayerTest {
             hand.add(new CardGame.Card (3));
         }
         unfavouredHand.set(player, hand);
-        assertTrue((Boolean) getResult(player, "checkIfWon"));
+        assertTrue((Boolean) invokeMethod(player, "checkIfWon"));
     }
 
     @Test
@@ -88,8 +89,8 @@ public class PlayerTest {
             hand.add(new CardGame.Card (1));
         }
         favouredHand.set(player, hand);
-        Boolean ifWon = (Boolean) getResult(player, "checkIfWon");
-        assertTrue(!ifWon);
+        Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
+        assertFalse(ifWon);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class PlayerTest {
         }
         hand.add(new CardGame.Card (7));
         unfavouredHand.set(player, hand);
-        Boolean ifWon = (Boolean) getResult(player, "checkIfWon");
-        assertTrue(!ifWon);
+        Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
+        assertFalse(ifWon);
     }
 }

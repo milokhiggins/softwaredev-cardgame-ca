@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
 import static cardgame.Util.getMethodByName;
+import static cardgame.Util.invokeMethod;
 
 public class CardGameTest {
 
@@ -29,11 +30,7 @@ public class CardGameTest {
             pack.push(new CardGame.Card(i));
         }
 
-        Method roundRobin = getMethodByName(CardGame.class, "roundRobinDeal");
-
-        //roundRobinDeal is private; set it too be accessible
-        roundRobin.setAccessible(true);
-        roundRobin.invoke(null, receivers, pack);
+        invokeMethod(new CardGame(), "roundRobinDeal", receivers, pack);
 
         Object[] receiverACards = new Object[4];
         Object[] receiverBCards = new Object[4];
@@ -62,10 +59,7 @@ public class CardGameTest {
             pack.push(new CardGame.Card(i));
         }
 
-        Method roundRobin = getMethodByName(CardGame.class, "roundRobinDeal");
-        //roundRobinDeal is private; set it too be accessible
-        roundRobin.setAccessible(true);
-        roundRobin.invoke(null, receivers, pack);
+        invokeMethod(new CardGame(), "roundRobinDeal", receivers, pack);
 
         CardGame.Card[] packLeftover = new CardGame.Card[8];
         for (int i = 0; i < 8; i++) {
