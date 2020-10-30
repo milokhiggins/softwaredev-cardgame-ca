@@ -28,7 +28,7 @@ public class MockCardDeck implements CardDeckInterface {
     }
 
     @Override
-    public boolean enoughCards() {
+    public boolean isNotEmpty() {
         return false;
     }
 
