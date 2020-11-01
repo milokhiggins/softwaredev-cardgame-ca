@@ -24,7 +24,55 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRun() throws Exception {
+    public void testRunStartHandWinUnFavoured() throws Exception {
+        for (int i = 0; i <4; i++) {
+            player.appendCard(new CardGame.Card(3));
+        }
+        player.run();
+
+    }
+
+    @Test
+    public void testRunStartHandWinFavoured() throws Exception {
+        for (int i = 0; i <4; i++) {
+            player.appendCard(new CardGame.Card(1));
+        }
+        player.run();
+    }
+
+    @Test
+    public void testRunWait() throws Exception {
+
+        player.run();
+    }
+
+    @Test
+    public void testRunFavouredCard() throws Exception {
+
+        player.run();
+    }
+
+    @Test
+    public void testRunUnFavouredCard() throws Exception {
+
+        player.run();
+    }
+
+    @Test
+    public void testRunFavouredWin() throws Exception {
+
+        player.run();
+    }
+
+    @Test
+    public void testRunUnFavouredWin() throws Exception {
+
+        player.run();
+    }
+
+    @Test
+    public void testRunNoWin() throws Exception {
+
         player.run();
     }
 

@@ -31,14 +31,4 @@ public class MockCardDeck implements CardDeckInterface {
     public boolean isNotEmpty() {
         return false;
     }
-
-    @Override
-    public void addConsumerPlayer(Player player) {
-
-    }
-
-    @Override
-    public void addProducerPlayer(Player player) {
-
-    }
 }

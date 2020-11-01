@@ -26,16 +26,4 @@ public interface CardDeckInterface {
      * @return
      */
     boolean isNotEmpty();
-
-    /**
-     *
-     * @param player
-     */
-    void addConsumerPlayer(Player player);
-
-    /**
-     *
-     * @param player
-     */
-    void addProducerPlayer(Player player);
 }

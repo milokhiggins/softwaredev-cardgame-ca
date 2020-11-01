@@ -22,7 +22,7 @@ public class CardDeckTest {
 
     @Before
     public void setUp() {
-        cardDeck = new CardDeck();
+        cardDeck = new CardDeck(3);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class CardDeckTest {
 
     @Test
     public void testAddCardNotifies() throws Exception {
-        CardDeck personalDeck = new CardDeck();
+        CardDeck personalDeck = new CardDeck(3);
         //start a thread to be notified by (waits on) the deck
         Thread waiterThread = new Thread(() -> {
             synchronized (personalDeck) {
@@ -126,10 +126,23 @@ public class CardDeckTest {
         deckContentsField.setAccessible(true);
 
         ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
-        //contents.add(new CardGame.Card(1));
+        contents.add(new CardGame.Card(1));
 
         deckContentsField.set(cardDeck, contents);
 
+        assertTrue(cardDeck.isNotEmpty());
+    }
+
+    @Test
+    public void testIsNotEmptyMultipleCardsTrue() throws Exception {
+        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
+        deckContentsField.setAccessible(true);
+
+        ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+        for (int i = 0; i < 12; i++ ){
+            contents.add(new CardGame.Card(i));
+        }
+        deckContentsField.set(cardDeck, contents);
         assertTrue(cardDeck.isNotEmpty());
     }
 
@@ -139,17 +152,40 @@ public class CardDeckTest {
     }
 
     @Test
-    public void testAddConsumerPlayer() throws Exception {
-        cardDeck.addConsumerPlayer(new Player(0, new CardDeck(), new CardDeck()));
-    }
-
-    @Test
-    public void testAddProducerPlayer() throws Exception {
-        cardDeck.addProducerPlayer(new Player(0, new CardDeck(), new CardDeck()));
-    }
-
-    @Test
     public void testAppendCard() throws Exception {
-        cardDeck.appendCard(new CardGame.Card(0));
+        CardGame.Card expectedCard1 = new CardGame.Card(7);
+        cardDeck.appendCard(expectedCard1);
+        CardGame.Card expectedCard2 = new CardGame.Card(8);
+        cardDeck.appendCard(expectedCard2);
+        CardGame.Card expectedCard3 = new CardGame.Card(9);
+        cardDeck.appendCard(expectedCard3);
+
+        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
+        deckContentsField.setAccessible(true);
+
+        ArrayDeque<CardGame.Card> deckContents = (ArrayDeque<CardGame.Card>) deckContentsField.get(cardDeck);
+
+        int length = deckContents.size();
+        assertEquals(length, 3);
+
+        CardGame.Card actualCard1 = deckContents.remove();
+        CardGame.Card actualCard2 = deckContents.remove();
+        CardGame.Card actualCard3 = deckContents.remove();
+
+        //check that the actual card matches the expected card; should be the *exact* same object
+        assertSame(expectedCard1, actualCard1);
+        assertSame(expectedCard2, actualCard2);
+        assertSame(expectedCard3, actualCard3);
+    }
+
+    @Test
+    public void testGetDeckNumber() throws AssertionError {
+        assertEquals(cardDeck.getDeckNumber(), 3);
+    }
+
+    @Test
+    public void testGetDeckNegativeNumber() throws AssertionError {
+        CardDeck cardDeck2 = new CardDeck(-100);
+        assertEquals(cardDeck2.getDeckNumber(), -100);
     }
 }

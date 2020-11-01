@@ -8,6 +8,15 @@ import java.util.ArrayDeque;
 public class CardDeck implements CardDeckInterface, CardReceiver {
 
     private ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+    private int deckNumber;
+
+    /**
+     *
+     * @param deckNumber
+     */
+    public CardDeck (int deckNumber){
+        this.deckNumber = deckNumber;
+    }
 
     /**
      * Take a card from the top of the pile
@@ -38,23 +47,11 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * @return
      */
     public boolean isNotEmpty() {
-        return false;
-    }
-
-    /**
-     *
-     * @param player
-     */
-    public void addConsumerPlayer(Player player) {
-
-    }
-
-    /**
-     *
-     * @param player
-     */
-    public void addProducerPlayer(Player player) {
-
+        if ( contents.size() == 0 ){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**
@@ -62,6 +59,14 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * @param card card to add
      */
     public void appendCard(CardGame.Card card) {
+        contents.add(card);
+    }
 
+    /**
+     *
+     * @return Deck's Number
+     */
+    public int getDeckNumber(){
+        return this.deckNumber;
     }
 }
