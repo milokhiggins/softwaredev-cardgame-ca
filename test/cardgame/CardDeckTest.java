@@ -38,13 +38,13 @@ public class CardDeckTest {
         deckContentsField.set(cardDeck, contents);
 
         CardGame.Card returnCard1 = cardDeck.takeCard();
-        assertSame(returnCard1, card1);
+        assertSame(card1, returnCard1);
 
         CardGame.Card returnCard2 = cardDeck.takeCard();
-        assertSame(returnCard2, card2);
+        assertSame(card1, returnCard2);
 
         CardGame.Card returnCard3 = cardDeck.takeCard();
-        assertSame(returnCard3, card3);
+        assertSame(card3, returnCard3);
     }
 
 
@@ -68,7 +68,7 @@ public class CardDeckTest {
         ArrayDeque<CardGame.Card> deckContents = (ArrayDeque<CardGame.Card>) deckContentsField.get(cardDeck);
 
         int length = deckContents.size();
-        assertEquals(length, 3);
+        assertEquals(3, length);
 
         CardGame.Card actualCard1 = deckContents.remove();
         CardGame.Card actualCard2 = deckContents.remove();
@@ -157,7 +157,7 @@ public class CardDeckTest {
         ArrayDeque<CardGame.Card> deckContents = (ArrayDeque<CardGame.Card>) deckContentsField.get(cardDeck);
 
         int length = deckContents.size();
-        assertEquals(length, 3);
+        assertEquals(3, length);
 
         CardGame.Card actualCard1 = deckContents.remove();
         CardGame.Card actualCard2 = deckContents.remove();
@@ -171,12 +171,12 @@ public class CardDeckTest {
 
     @Test
     public void testGetDeckNumber() throws AssertionError {
-        assertEquals(cardDeck.getDeckNumber(), 3);
+        assertEquals(3, cardDeck.getDeckNumber());
     }
 
     @Test
     public void testGetDeckNegativeNumber() throws AssertionError {
         CardDeck cardDeck2 = new CardDeck(-100);
-        assertEquals(cardDeck2.getDeckNumber(), -100);
+        assertEquals(-100, cardDeck2.getDeckNumber());
     }
 }

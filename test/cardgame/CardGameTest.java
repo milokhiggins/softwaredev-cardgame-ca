@@ -65,7 +65,7 @@ public class CardGameTest {
         for (int i = 0; i < 8; i++) {
             packLeftover[i] = new CardGame.Card(i+1);
         }
-        assertArrayEquals(pack.toArray(), packLeftover);
+        assertArrayEquals(packLeftover, pack.toArray());
     }
 }
 
