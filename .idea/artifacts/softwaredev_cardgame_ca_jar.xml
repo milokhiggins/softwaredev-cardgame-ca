@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="softwaredev-cardgame-ca:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/softwaredev_cardgame_ca_jar</output-path>
+    <root id="archive" name="softwaredev-cardgame-ca.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/src/cardgame" />
+      <element id="dir-copy" path="$PROJECT_DIR$/out/production/softwaredev-cardgame-ca/cardgame" />
+    </root>
+  </artifact>
+</component>
