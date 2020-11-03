@@ -4,6 +4,9 @@
     <root id="archive" name="softwaredev-cardgame-ca.jar">
       <element id="dir-copy" path="$PROJECT_DIR$/src/cardgame" />
       <element id="dir-copy" path="$PROJECT_DIR$/out/production/softwaredev-cardgame-ca/cardgame" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
     </root>
   </artifact>
 </component>
