@@ -15,6 +15,7 @@ public class Player implements Runnable, CardReceiver {
     private int playerNumber;
     private CardDeckInterface leftDeck;
     private CardDeckInterface rightDeck;
+    private CardGame game;
 
     /**
      * Constructs a player with the given number.
@@ -22,10 +23,11 @@ public class Player implements Runnable, CardReceiver {
      * @param leftDeck  deck to the left of the player
      * @param rightDeck deck to the right of the player
      */
-    public Player(int number, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
+    public Player(int number, CardGame game, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.playerNumber = number;
+        this.game = game;
     }
 
     /**

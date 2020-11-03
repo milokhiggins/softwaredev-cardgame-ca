@@ -1,25 +1,26 @@
 package cardgame;
 
+import java.util.ArrayDeque;
+
 public class MockCardDeck implements CardDeckInterface {
 
-    private int num;
+    public int deckNumber;
+    public ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+
+    public MockCardDeck(int num) {
+        this.deckNumber = num;
+    }
 
     @Override
     public CardGame.Card takeCard() {
-        return new CardGame.Card(num);
+        return contents.remove();
     }
 
-    /**
-     * Set the value of the Card returned by takeCard
-     * @param num number to set
-     */
-    public void setCardNumber(int num) {
-        this.num = num;
-    }
 
     @Override
     public synchronized void addCard(CardGame.Card card) {
-
+        contents.add(card);
+        notify();
     }
 
     @Override
@@ -29,6 +30,10 @@ public class MockCardDeck implements CardDeckInterface {
 
     @Override
     public boolean isNotEmpty() {
-        return false;
+        return contents.size() != 0;
+    }
+
+    public int getDeckNumber(){
+        return this.deckNumber;
     }
 }
