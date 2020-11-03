@@ -12,7 +12,7 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
 
     /**
      *
-     * @param deckNumber
+     * @param deckNumber number of the deck
      */
     public CardDeck (int deckNumber){
         this.deckNumber = deckNumber;
@@ -44,14 +44,10 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
 
     /**
      *
-     * @return
+     * @return true if the deck isn't empty, false otherwise
      */
     public boolean isNotEmpty() {
-        if ( contents.size() == 0 ){
-            return false;
-        }else{
-            return true;
-        }
+        return contents.size() != 0;
     }
 
     /**

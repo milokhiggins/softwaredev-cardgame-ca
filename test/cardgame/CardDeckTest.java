@@ -3,9 +3,6 @@ package cardgame;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-
 import org.junit.Test;
 import org.junit.Before;
 
@@ -90,20 +87,14 @@ public class CardDeckTest {
         Thread waiterThread = new Thread(() -> {
             synchronized (personalDeck) {
                 try {
-                    System.out.println("thread about to wait");
                     personalDeck.wait();
-                    System.out.println("thread finished waiting");
                 } catch (InterruptedException e) {
                     System.out.println("dummy thread was interrupted");
                 }
             }
         });
 
-        Thread adderThread = new Thread(() -> {
-            System.out.println("about to add card");
-            personalDeck.addCard(new CardGame.Card(5000));
-            System.out.println("added card");
-        });
+        Thread adderThread = new Thread(() -> personalDeck.addCard(new CardGame.Card(5000)));
 
         waiterThread.setPriority(Thread.MAX_PRIORITY);
         waiterThread.start();
