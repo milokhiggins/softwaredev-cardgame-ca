@@ -2,6 +2,7 @@ package cardgame;
 
 import java.util.Stack;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Card game class etc etc
@@ -12,6 +13,7 @@ import java.util.Objects;
 public class CardGame {
 
     private int n;
+    public AtomicInteger winner =  new AtomicInteger(0);
 
     /**
      * Executable main method

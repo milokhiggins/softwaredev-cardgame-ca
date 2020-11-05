@@ -1,6 +1,7 @@
 package cardgame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Player class (something something something)
@@ -16,6 +17,12 @@ public class Player implements Runnable, CardReceiver {
     private CardDeckInterface leftDeck;
     private CardDeckInterface rightDeck;
     private CardGame game;
+    private Random rand = new Random();
+    private Boolean gameOver = false;
+    private Boolean hasWon = false;
+
+
+
 
     /**
      * Constructs a player with the given number.
@@ -34,8 +41,49 @@ public class Player implements Runnable, CardReceiver {
      * Run the player thread.
      */
     public void run() {
+        while (!gameOver){
+            if (checkIfWon()){
+                boolean success = game.winner.compareAndSet(0, playerNumber);
+                System.out.println(game.winner.getClass());
+                if (success){
+                    winAndExit();
+                }else{
+                    loseAndExit();
+                }
+                break;
+            } else if(game.winner.get() != 0){
+                loseAndExit();
+                break;
+            }
+            if (leftDeck.isNotEmpty()) {
+                CardGame.Card drawnCard = leftDeck.takeCard();
+                appendCard(drawnCard);
+                int index = rand.nextInt(unfavouredHand.size());
+                CardGame.Card discardCard =  unfavouredHand.remove(index);
+                rightDeck.addCard(discardCard);
+            }else{
+                synchronized (leftDeck){
+                    try {
+                        leftDeck.wait();
+                    }catch (InterruptedException e){
+                        break;
+                    }
+                }
+            }
+        }
 
     }
+
+    private void winAndExit() {
+        hasWon = true;
+        gameOver = true;
+
+    }
+
+    private void loseAndExit() {
+        gameOver = true;
+    }
+
 
     /**
      * Receive a card.

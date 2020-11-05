@@ -9,13 +9,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
+import java.util.Random;
 import static cardgame.Util.invokeMethod;
 import static org.junit.Assert.*;
 
 public class PlayerTest {
 
     private Player player;
-    private MockCardGame game;
+    private CardGame game;
     private MockCardDeck mockLeftDeck;
     private MockCardDeck mockRightDeck;
 
@@ -28,14 +29,14 @@ public class PlayerTest {
     public void setUp() {
        mockLeftDeck = new MockCardDeck(1);
        mockRightDeck = new MockCardDeck(2);
-       game = new MockCardGame();
+       game = new CardGame();
        player = new Player(1, game, mockLeftDeck, mockRightDeck);
     }
 
     @After
     public void tearDown() {
         //set the winner variable to a bogus value so that the player exits
-        game.winner.value = 44;
+        game.winner.set(44);
         synchronized (mockLeftDeck) {
             //notify the player if they are waiting on the deck
             mockLeftDeck.notify();
@@ -49,7 +50,7 @@ public class PlayerTest {
         }
         player.run();
         //assert that the player has set the winner attribute to their own value
-        assertEquals(1, game.winner.value);
+        assertEquals(1, game.winner.get());
 
     }
 
@@ -60,7 +61,7 @@ public class PlayerTest {
         }
         player.run();
         //assert that the player has set the winner attribute to their own value
-        assertEquals(1, game.winner.value);
+        assertEquals(1, game.winner.get());
 
     }
 
@@ -124,14 +125,12 @@ public class PlayerTest {
         Field unfavouredHandField = player.getClass().getDeclaredField("unfavouredHand");
         unfavouredHandField.setAccessible(true);
         ArrayList<CardGame.Card> unfavouredHand = (ArrayList<CardGame.Card>) unfavouredHandField.get(player);
-        CardGame.Card[] expectedHand = new CardGame.Card[] {
-                new CardGame.Card(3),
-                new CardGame.Card(3),
-                new CardGame.Card(3),
-                new CardGame.Card(4)
-        };
+
+        assertEquals(1,mockRightDeck.contents.size());
+        int discardCardValue = mockRightDeck.contents.peek().getNumber();
+
         //convert hand to array, compare each element
-        assertArrayEquals(expectedHand, unfavouredHand.toArray());
+        assertTrue(discardCardValue== 3 || discardCardValue== 4 );
     }
 
     @Test
@@ -150,20 +149,49 @@ public class PlayerTest {
 
     @Test
     public void testRunFavouredWin() throws Exception {
+        givePlayerCards(1, 1, 5, 7);
+        Thread playerThread = new Thread(player);
+        mockLeftDeck.addCard(new CardGame.Card(1));
+        mockLeftDeck.addCard(new CardGame.Card(1));
+        playerThread.start();
+        Thread.sleep(100);
 
-        player.run();
+        assertEquals(1, game.winner.get());
+
+        Thread.State state = playerThread.getState();
+        assertSame(Thread.State.TERMINATED, state);
+
     }
 
     @Test
     public void testRunUnfavouredWin() throws Exception {
+        Field randomField = player.getClass().getDeclaredField("rand");
+        randomField.setAccessible(true);
+        Random random = new Random(23);
+        randomField.set(player, random);
+        givePlayerCards(9, 9, 7, 9);
+        mockLeftDeck.addCard(new CardGame.Card(9));
+        Thread playerThread = new Thread(player);
+        playerThread.start();
+        Thread.sleep(100);
 
-        player.run();
+        assertEquals(1, game.winner.get());
+
+        Thread.State state = playerThread.getState();
+        assertSame(Thread.State.TERMINATED, state);
     }
 
     @Test
-    public void testRunNoWin() throws Exception {
+    public void testExitOnCompetitorWin() throws Exception {
+        game.winner.set(3);
+        Thread playerThread = new Thread(player);
+        playerThread.start();
 
-        player.run();
+        Thread.sleep(100);
+
+        Thread.State state = playerThread.getState();
+        assertSame(Thread.State.TERMINATED, state);
+
     }
 
     private void genericAppendCardTest(int num, String fieldName) throws Exception {
