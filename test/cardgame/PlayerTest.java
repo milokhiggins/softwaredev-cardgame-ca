@@ -16,8 +16,7 @@ import static org.junit.Assert.*;
 public class PlayerTest {
 
     private Player player;
-    //DEBUG: private CardGame game;
-    private MockGame game;
+    private CardGame game;
     private MockCardDeck mockLeftDeck;
     private MockCardDeck mockRightDeck;
 
@@ -30,8 +29,7 @@ public class PlayerTest {
     public void setUp() {
         mockLeftDeck = new MockCardDeck(1);
         mockRightDeck = new MockCardDeck(2);
-        //DEBUG: game = new CardGame();
-        game = new MockGame();
+        game = new CardGame();
         player = new Player(1, game, mockLeftDeck, mockRightDeck);
     }
 
