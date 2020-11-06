@@ -41,8 +41,8 @@ public class CardGame {
      */
     private static int inputFromUserNumberOfPlayers() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Please enter the number of players: ");
         while(true) {
+            System.out.print("Please enter the number of players: ");
             try {
                 int number = scanner.nextInt();
                 if (number > 1) {
@@ -54,7 +54,6 @@ public class CardGame {
                 scanner.nextLine();
                 System.out.println("Number of players must be an integer.");
             }
-            System.out.print("Please enter the number of players: ");
         }
     }
 
@@ -80,7 +79,7 @@ public class CardGame {
     private void run() {
         numberOfPlayers = inputFromUserNumberOfPlayers();
 
-        Stack<Card> pack = new Stack<>();
+        Stack<Card> pack = getPack();
     }
 
     /**
