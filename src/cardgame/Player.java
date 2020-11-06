@@ -22,8 +22,6 @@ public class Player implements Runnable, CardReceiver {
     private Boolean hasWon = false;
 
 
-
-
     /**
      * Constructs a player with the given number.
      * @param number    player number
@@ -44,7 +42,6 @@ public class Player implements Runnable, CardReceiver {
         while (!gameOver){
             if (checkIfWon()){
                 boolean success = game.winner.compareAndSet(0, playerNumber);
-                System.out.println(game.winner.getClass());
                 if (success){
                     winAndExit();
                 }else{
