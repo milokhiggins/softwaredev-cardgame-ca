@@ -274,4 +274,5 @@ public class PlayerTest {
         Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
     }
+
 }

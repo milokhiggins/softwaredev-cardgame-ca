@@ -14,10 +14,6 @@ import static cardgame.Util.invokeMethod;
 
 public class CardGameTest {
 
-    @Test
-    public void testMain() throws Exception {
-        CardGame.main(new String[]{"args"});
-    }
 
     @Test
     public void testRoundRobinDealDecks() throws Exception {
@@ -66,6 +62,21 @@ public class CardGameTest {
             packLeftover[i] = new CardGame.Card(i+1);
         }
         assertArrayEquals(packLeftover, pack.toArray());
+    }
+
+    @Test
+    public void testInputFromUserNumberOfPlayers() throws AssertionError {
+
+    }
+
+    @Test
+    public void testInputFromUserPackFilename() throws AssertionError {
+
+    }
+
+    @Test
+    public void testGetPack() throws AssertionError {
+
     }
 }
 
