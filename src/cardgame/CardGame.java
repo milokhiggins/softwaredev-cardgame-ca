@@ -1,15 +1,12 @@
 package cardgame;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+
 import java.util.InputMismatchException;
 import java.util.Stack;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.BufferedReader;
 
 /**
  * Card game class etc etc
@@ -57,15 +54,27 @@ public class CardGame {
         }
     }
 
-    private static String inputFromUserPackPath() {
+    private void inputFromUserPackPath() {
         Scanner scanner = new Scanner(System.in);
-        String filename;
+        String filePath;
         while(true) {
             System.out.print("Please enter the location of pack to load: ");
-            filename = scanner.nextLine();
-            File packFile = new File(filename);
+            filePath = scanner.nextLine();
+            File packFile = new File(filePath);
             if (packFile.isFile()) {
-                return filename;
+                boolean isValid;
+                try {
+                    isValid = validPackFile(filePath);
+                } catch (IOException e) {
+                    System.out.println("An error occurred while reading the file.");
+                    continue;
+                }
+                if (isValid) {
+                    break;
+                } else {
+                    System.out.println("The provided file is not valid; either it doesn't have enough values, or" +
+                                       "one of the lines is not a positive integer.");
+                }
             } else {
                 System.out.println("Invalid filename.");
             }
@@ -82,21 +91,56 @@ public class CardGame {
     }
 
     /**
-     * Ask user to input number of players and location of pack file
-     * Then read the pack file and return the cards
+     * Read the pack from the file.
+     * If the file isn't valid, return false. Otherwise set the pack attribute to the contents of the file.
      * @return pack of cards
      */
-    private Card[] getPack(String filename) {
-        Card[] pack = new Card[8*numberOfPlayers];
+    private boolean validPackFile(String filename) throws IOException {
+        pack = new Card[8*numberOfPlayers];
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            reader = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
             //this can only happen if the the file was deleted
             System.exit(-1);
         }
+        int index = 0;
+        try {
 
+            while (index < (8 * numberOfPlayers)) {
+                String line = reader.readLine();
+                if (line == null) {
+                    //end of file reached
+                    break;
+                } else {
+                    int value;
+                    try {
+                        value = Integer.parseInt(line);
+                    } catch (NumberFormatException e) {
+                        //value is not a number; pack is invalid
+                        reader.close();//TODO: might throw an exception, which we don't care nor want
+                        return false;
+                    }
+                    if (value > 0) {
+                        pack[index] = new CardGame.Card(value);
+                    } else {
+                        //negative/zero value integer; pack is invalid
+                        reader.close();
+                        return false;
+                    }
+                }
+                index++;
+            }
 
-        return pack;
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                //ignore exception on close
+            }
+        }
+        //if index is not 8n then the pack file had too few values
+        return index == (8 * numberOfPlayers);
     }
 
     /**

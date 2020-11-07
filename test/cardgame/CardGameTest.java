@@ -2,8 +2,6 @@ package cardgame;
 
 import java.io.*;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import org.junit.Test;
 import java.lang.reflect.Method;
@@ -14,6 +12,8 @@ import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static cardgame.Util.getMethodByName;
 import static cardgame.Util.invokeMethod;
@@ -73,7 +73,7 @@ public class CardGameTest {
     public void testInputFromUserNotNumberNumberOfPlayers() throws Exception {
 
         String[] inputs = new String[]{"not a number\n", "3\n"};
-        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers", null);
 
         //make sure test is platform independent ;)
         String newline = System.lineSeparator();
@@ -87,7 +87,7 @@ public class CardGameTest {
     public void testInputFromUserNegativeNumberNumberOfPlayers() throws Exception {
 
         String[] inputs = new String[]{"-7\n", "3\n"};
-        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers", null);
 
         //make sure test is platform independent ;)
         String newline = System.lineSeparator();
@@ -102,7 +102,7 @@ public class CardGameTest {
     public void testInputFromUserWrittenNumberNumberOfPlayers() throws Exception {
 
         String[] inputs = new String[]{"three\n", "3\n"};
-        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers", null);
 
         //make sure test is platform independent ;)
         String newline = System.lineSeparator();
@@ -120,7 +120,7 @@ public class CardGameTest {
      * @return contentOutput
      * @throws Exception
      */
-    private String genericIOTest (String[] inputs, String method ) throws Exception {
+    private String genericIOTest(String[] inputs, String method, CardGame game) throws Exception {
         //store original System.in and System.out for later
         InputStream systemInBackup = System.in;
         PrintStream systemOutBackup = System.out;
@@ -138,7 +138,7 @@ public class CardGameTest {
             Method testMethod = getMethodByName(CardGame.class, method);
             testMethod.setAccessible(true);
 
-            testMethod.invoke(null);
+            testMethod.invoke(game);
             consoleOutput = mockOut.toString();
 
         } finally {
@@ -170,7 +170,8 @@ public class CardGameTest {
     private void genericPackPathTest(String input) throws Exception {
         String filename = createTempFile();
         String[] inputs = {input, filename};
-        String consoleOutput = genericIOTest(inputs, "inputFromUserPackPath");
+        CardGame game = new CardGame();
+        String consoleOutput = genericIOTest(inputs, "inputFromUserPackPath", game);
 
         //make sure test is platform independent ;)
         String newline = System.lineSeparator();
@@ -192,18 +193,22 @@ public class CardGameTest {
         return filename;
     }
 
-    @Test
-    public void testGetPackValidPack() throws Exception {
+    private CardGame makeGameAndSetNumPlayers(int num) throws IllegalAccessException, NoSuchFieldException {
         //set n using reflection
         CardGame game = new CardGame();
         Field numberOfPlayers = game.getClass().getDeclaredField("numberOfPlayers");
         numberOfPlayers.setAccessible(true);
-        numberOfPlayers.set(game, 3);
+        numberOfPlayers.set(game, num);
+        return game;
+    }
+    @Test
+    public void testValidPackFile_ValidPack() throws Exception {//TODO: this test fails???
+        CardGame game = makeGameAndSetNumPlayers(3);
 
         String[] packContents = new String[24];
         Random random = new Random();
         for (int i=0; i<24; i++){
-            packContents[i] = Integer.toString(random.nextInt(100));
+            packContents[i] = Integer.toString(random.nextInt(99)+1);
         }
         String cardPackPath = createTempPackFile(packContents);
         CardGame.Card[] expectedPack = new CardGame.Card[24];
@@ -211,11 +216,11 @@ public class CardGameTest {
             expectedPack[i] = new CardGame.Card(Integer.parseInt(packContents[i]));
         }
 
-        Method getPack = getMethodByName(CardGame.class,"getPack");
+        Method getPack = getMethodByName(CardGame.class,"validPackFile");
         getPack.setAccessible(true);
-        getPack.invoke(game, cardPackPath);
+        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+        assertTrue(result);
         //check that the output pack
-
         Field pack = game.getClass().getDeclaredField("pack");
         pack.setAccessible(true);
         CardGame.Card[] actualPack = (CardGame.Card[]) pack.get(game);
@@ -223,10 +228,65 @@ public class CardGameTest {
 
     }
 
+    @Test
+    public void testValidPackFile_TooShort() throws Exception {
+        CardGame game = makeGameAndSetNumPlayers(3);
+
+        String[] packContents = new String[15];
+        Random random = new Random();
+        for (int i = 0; i < 15; i++) {
+            packContents[i] = Integer.toString(random.nextInt(100));
+        }
+        String cardPackPath = createTempPackFile(packContents);
+
+        Method getPack = getMethodByName(CardGame.class,"validPackFile");
+        getPack.setAccessible(true);
+        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+
+        //not valid pack. should return false
+        assertFalse(result);
+    }
+
+    @Test
+    public void testValidPackFile_NotInt() throws Exception {
+        CardGame game = makeGameAndSetNumPlayers(3);
+
+        String[] packContents = new String[24];
+        for (int i = 0; i < 24; i++) {
+            packContents[i] = "abc";
+        }
+        String cardPackPath = createTempPackFile(packContents);
+
+        Method getPack = getMethodByName(CardGame.class,"validPackFile");
+        getPack.setAccessible(true);
+        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+
+        //not valid pack. should return false
+        assertFalse(result);
+    }
+
+    @Test
+    public void testValidPackFile_BadIntValues() throws Exception {
+        CardGame game = makeGameAndSetNumPlayers(3);
+
+        String[] packContents = new String[24];
+        for (int i = 0; i < 24; i++) {
+            packContents[i] = "-2";
+        }
+        String cardPackPath = createTempPackFile(packContents);
+
+        Method getPack = getMethodByName(CardGame.class,"validPackFile");
+        getPack.setAccessible(true);
+        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+
+        //not valid pack. should return false
+        assertFalse(result);
+    }
+
     private String createTempPackFile(String[] packContents) throws Exception {
         String cardDeckFile = createTempFile();
         FileWriter myWriter = new FileWriter(cardDeckFile);
-        for (String line :packContents) {
+        for (String line : packContents) {
             myWriter.write(line);
         }
         myWriter.close();
