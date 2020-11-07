@@ -21,7 +21,7 @@ public class CardGame {
 
     private int numberOfPlayers;
     public AtomicInteger winner =  new AtomicInteger(0);
-
+    private Card[] pack;
     private Player[] players;
     private CardDeck[] decks;
 
@@ -57,7 +57,7 @@ public class CardGame {
         }
     }
 
-    private static String inputFromUserPackFilename() {
+    private static String inputFromUserPackPath() {
         Scanner scanner = new Scanner(System.in);
         String filename;
         while(true) {
@@ -79,7 +79,6 @@ public class CardGame {
     private void run() {
         numberOfPlayers = inputFromUserNumberOfPlayers();
 
-        Stack<Card> pack = getPack();
     }
 
     /**
@@ -87,9 +86,8 @@ public class CardGame {
      * Then read the pack file and return the cards
      * @return pack of cards
      */
-    private Stack<Card> getPack() {
-        String filename = inputFromUserPackFilename();
-        Stack<Card> pack = new Stack<>();
+    private Card[] getPack(String filename) {
+        Card[] pack = new Card[8*numberOfPlayers];
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {

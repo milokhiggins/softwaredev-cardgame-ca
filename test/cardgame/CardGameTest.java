@@ -2,12 +2,14 @@ package cardgame;
 
 import java.io.*;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.junit.Test;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+import java.util.Random;
 import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +19,6 @@ import static cardgame.Util.getMethodByName;
 import static cardgame.Util.invokeMethod;
 
 public class CardGameTest {
-
 
     @Test
     public void testRoundRobinDealDecks() throws Exception {
@@ -69,17 +70,64 @@ public class CardGameTest {
     }
 
     @Test
-    public void testInputFromUserNumberOfPlayers() throws Exception {
+    public void testInputFromUserNotNumberNumberOfPlayers() throws Exception {
+
+        String[] inputs = new String[]{"not a number\n", "3\n"};
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+
+        //make sure test is platform independent ;)
+        String newline = System.lineSeparator();
+        String expectedString = "Please enter the number of players: Number of players must be an integer." + newline +
+                                "Please enter the number of players: ";
+        assertEquals(expectedString,consoleOutput);
+
+    }
+
+    @Test
+    public void testInputFromUserNegativeNumberNumberOfPlayers() throws Exception {
+
+        String[] inputs = new String[]{"-7\n", "3\n"};
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+
+        //make sure test is platform independent ;)
+        String newline = System.lineSeparator();
+        String expectedString =
+                "Please enter the number of players: Number of players must be greater than 1." + newline +
+                "Please enter the number of players: ";
+        assertEquals(expectedString,consoleOutput);
+
+    }
+
+    @Test
+    public void testInputFromUserWrittenNumberNumberOfPlayers() throws Exception {
+
+        String[] inputs = new String[]{"three\n", "3\n"};
+        String consoleOutput = genericIOTest(inputs, "inputFromUserNumberOfPlayers");
+
+        //make sure test is platform independent ;)
+        String newline = System.lineSeparator();
+        String expectedString =
+                "Please enter the number of players: Number of players must be an integer." + newline +
+                "Please enter the number of players: ";
+        assertEquals(expectedString,consoleOutput);
+
+    }
+
+    /**
+     * Take mock user input and return program console Output.
+     *
+     * @param inputs
+     * @return contentOutput
+     * @throws Exception
+     */
+    private String genericIOTest (String[] inputs, String method ) throws Exception {
         //store original System.in and System.out for later
         InputStream systemInBackup = System.in;
         PrintStream systemOutBackup = System.out;
 
-        int result;
         String consoleOutput;
 
         try {
-            String[] inputs = new String[]{"not a number\n", "-7\n", "three\n", "3\n"};
-
             InputStream mockIn = MockSystemIO.makeMockInputStream(inputs);
             System.setIn(mockIn);
 
@@ -87,10 +135,10 @@ public class CardGameTest {
             PrintStream mockPrintOut = new PrintStream(mockOut);
             System.setOut(mockPrintOut);
 
-            Method testMethod = getMethodByName(CardGame.class, "inputFromUserNumberOfPlayers");
+            Method testMethod = getMethodByName(CardGame.class, method);
             testMethod.setAccessible(true);
 
-            result = (int) testMethod.invoke(null);
+            testMethod.invoke(null);
             consoleOutput = mockOut.toString();
 
         } finally {
@@ -99,25 +147,91 @@ public class CardGameTest {
             System.setOut(systemOutBackup);
         }
 
-        assertEquals(3, result);
+        return consoleOutput;
+    }
+
+    @Test
+    public void testInputFromUserPackInvalidPath() throws AssertionError, Exception {
+        String input = "is?fg$5&%/:\n";
+        genericPackPathTest(input);
+    }
+
+    @Test
+    public void testInputFromUserPackDoesNotExistPath() throws AssertionError, Exception {
+        String input = "hdsfkajsbfgyhdg32342s.txt\n";
+        genericPackPathTest(input);
+    }
+
+    /**
+     *
+     * @param input
+     * @throws Exception
+     */
+    private void genericPackPathTest(String input) throws Exception {
+        String filename = createTempFile();
+        String[] inputs = {input, filename};
+        String consoleOutput = genericIOTest(inputs, "inputFromUserPackPath");
+
         //make sure test is platform independent ;)
         String newline = System.lineSeparator();
-        String expectedString = "Please enter the number of players: Number of players must be an integer." + newline +
-                                "Please enter the number of players: Number of players must be greater than 1." + newline +
-                                "Please enter the number of players: Number of players must be an integer." + newline +
-                                "Please enter the number of players: ";
+        String expectedString =
+                "Please enter the location of pack to load: Invalid filename." + newline +
+                        "Please enter the location of pack to load: ";
         assertEquals(expectedString,consoleOutput);
+    }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
+    private String createTempFile() throws IOException {
+        File tempFile = File.createTempFile("PackTest-", ".txt");
+        String filename = tempFile.getPath().replace("\\", "\\\\");
+        tempFile.deleteOnExit();
+        return filename;
     }
 
     @Test
-    public void testInputFromUserPackFilename() throws AssertionError {
+    public void testGetPackValidPack() throws Exception {
+        //set n using reflection
+        CardGame game = new CardGame();
+        Field numberOfPlayers = game.getClass().getDeclaredField("numberOfPlayers");
+        numberOfPlayers.setAccessible(true);
+        numberOfPlayers.set(game, 3);
+
+        String[] packContents = new String[24];
+        Random random = new Random();
+        for (int i=0; i<24; i++){
+            packContents[i] = Integer.toString(random.nextInt(100));
+        }
+        String cardPackPath = createTempPackFile(packContents);
+        CardGame.Card[] expectedPack = new CardGame.Card[24];
+        for (int i=0; i<24; i++){
+            expectedPack[i] = new CardGame.Card(Integer.parseInt(packContents[i]));
+        }
+
+        Method getPack = getMethodByName(CardGame.class,"getPack");
+        getPack.setAccessible(true);
+        getPack.invoke(game, cardPackPath);
+        //check that the output pack
+
+        Field pack = game.getClass().getDeclaredField("pack");
+        pack.setAccessible(true);
+        CardGame.Card[] actualPack = (CardGame.Card[]) pack.get(game);
+        assertArrayEquals(expectedPack, actualPack);
 
     }
 
-    @Test
-    public void testGetPack() throws AssertionError {
-
+    private String createTempPackFile(String[] packContents) throws Exception {
+        String cardDeckFile = createTempFile();
+        FileWriter myWriter = new FileWriter(cardDeckFile);
+        for (String line :packContents) {
+            myWriter.write(line);
+        }
+        myWriter.close();
+        return cardDeckFile;
     }
+
 }
 
