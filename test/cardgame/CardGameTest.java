@@ -25,10 +25,10 @@ public class CardGameTest {
 
         MockCardReceiver mockReceiverA = new MockCardReceiver();
         MockCardReceiver mockReceiverB = new MockCardReceiver();
-        MockCardReceiver[] receivers = new MockCardReceiver[]{mockReceiverA, mockReceiverB};
-        Stack<CardGame.Card> pack = new Stack<>();
-        for (int i = 1; i < 9; i++) {
-            pack.push(new CardGame.Card(i));
+        MockCardReceiver[] receivers = {mockReceiverA, mockReceiverB};
+        CardGame.Card[] pack = new CardGame.Card[8];
+        for (int i = 0; i < 8; i++) {
+            pack[i] = new CardGame.Card(i+1);
         }
 
         invokeMethod(new CardGame(), "roundRobinDeal", receivers, pack);
@@ -36,8 +36,8 @@ public class CardGameTest {
         Object[] receiverACards = new Object[4];
         Object[] receiverBCards = new Object[4];
 
-        int[] valuesA = new int[]{8, 6, 4, 2};
-        int[] valuesB = new int[]{7, 5, 3, 1};
+        int[] valuesB = {2, 4, 6, 8};
+        int[] valuesA = {1, 3, 5, 7};
 
         for(int i = 0; i < 4; i++) {
             receiverACards[i] = new CardGame.Card(valuesA[i]);
@@ -48,26 +48,6 @@ public class CardGameTest {
         assertArrayEquals(receiverBCards, mockReceiverB.cardList);
     }
 
-    @Test
-    public void testRoundRobinDealPack() throws Exception {
-
-        MockCardReceiver mockReceiverA = new MockCardReceiver();
-        MockCardReceiver mockReceiverB = new MockCardReceiver();
-        MockCardReceiver[] receivers = new MockCardReceiver[] {mockReceiverA, mockReceiverB};
-        Stack<CardGame.Card> pack = new Stack<>();
-
-        for (int i = 1; i < 17; i++) {
-            pack.push(new CardGame.Card(i));
-        }
-
-        invokeMethod(new CardGame(), "roundRobinDeal", receivers, pack);
-
-        CardGame.Card[] packLeftover = new CardGame.Card[8];
-        for (int i = 0; i < 8; i++) {
-            packLeftover[i] = new CardGame.Card(i+1);
-        }
-        assertArrayEquals(packLeftover, pack.toArray());
-    }
 
     @Test
     public void testInputFromUserNotNumberNumberOfPlayers() throws Exception {
@@ -151,21 +131,41 @@ public class CardGameTest {
     }
 
     @Test
-    public void testInputFromUserPackInvalidPath() throws AssertionError, Exception {
+    public void testInputFromUserPackInvalidPath() throws Exception {
         String input = "is?fg$5&%/:\n";
         genericPackPathTest(input);
     }
 
     @Test
-    public void testInputFromUserPackDoesNotExistPath() throws AssertionError, Exception {
+    public void testInputFromUserPackDoesNotExistPath() throws Exception {
         String input = "hdsfkajsbfgyhdg32342s.txt\n";
         genericPackPathTest(input);
     }
 
+    @Test
+    public void testInputFromUserPackInvalidPackFile() throws Exception {
+        String[] linesInvalid = {"this", "is", "not", "valid"};
+        String filePathInvalid = createTempPackFile(linesInvalid);
+        String[] linesValid = new String[16];
+        for (int i = 0; i < 16; i++) {
+            linesValid[i] = Integer.toString(i+1);
+        }
+        String filePathValid = createTempPackFile(linesValid);
+        String[] inputs = {filePathInvalid+"\n", filePathValid+"\n"};
+        CardGame game = makeGameAndSetNumPlayers(2);
+        String consoleOutput = genericIOTest(inputs, "inputFromUserPackPath", game);
+
+        String newline = System.lineSeparator();
+        String expectedOutput = "Please enter the location of pack to load: The provided file is not valid; either it" +
+                                " doesn't have enough values, or one of the lines is not a positive integer." + newline+
+                                "Please enter the location of pack to load: ";
+        assertEquals(expectedOutput, consoleOutput);
+    }
+
     /**
      *
-     * @param input
-     * @throws Exception
+     * @param input input to test
+     * @throws Exception any error occurred, including assertion fail
      */
     private void genericPackPathTest(String input) throws Exception {
         String filename = createTempFile();
@@ -177,14 +177,14 @@ public class CardGameTest {
         String newline = System.lineSeparator();
         String expectedString =
                 "Please enter the location of pack to load: Invalid filename." + newline +
-                        "Please enter the location of pack to load: ";
+                "Please enter the location of pack to load: ";
         assertEquals(expectedString,consoleOutput);
     }
 
     /**
-     *
-     * @return
-     * @throws IOException
+     * Make a temporary .txt file
+     * @return path of the temp file
+     * @throws IOException error making file
      */
     private String createTempFile() throws IOException {
         File tempFile = File.createTempFile("PackTest-", ".txt");
@@ -202,7 +202,7 @@ public class CardGameTest {
         return game;
     }
     @Test
-    public void testValidPackFile_ValidPack() throws Exception {//TODO: this test fails???
+    public void testValidPackFile_ValidPack() throws Exception {
         CardGame game = makeGameAndSetNumPlayers(3);
 
         String[] packContents = new String[24];
@@ -286,8 +286,9 @@ public class CardGameTest {
     private String createTempPackFile(String[] packContents) throws Exception {
         String cardDeckFile = createTempFile();
         FileWriter myWriter = new FileWriter(cardDeckFile);
+        String newline = System.lineSeparator();
         for (String line : packContents) {
-            myWriter.write(line);
+            myWriter.write(line + newline);
         }
         myWriter.close();
         return cardDeckFile;

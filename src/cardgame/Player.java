@@ -53,11 +53,14 @@ public class Player implements Runnable, CardReceiver {
                 break;
             }
             if (leftDeck.isNotEmpty()) {
+                String fh = handToString(favouredHand);
+                String ufh = handToString(unfavouredHand);
                 CardGame.Card drawnCard = leftDeck.takeCard();
                 appendCard(drawnCard);
                 int index = rand.nextInt(unfavouredHand.size());
-                CardGame.Card discardCard =  unfavouredHand.remove(index);
+                CardGame.Card discardCard = unfavouredHand.remove(index);
                 rightDeck.addCard(discardCard);
+                markAction(drawnCard, discardCard, fh, ufh);
             }else{
                 synchronized (leftDeck){
                     try {
@@ -69,6 +72,23 @@ public class Player implements Runnable, CardReceiver {
             }
         }
 
+    }
+
+    private void markAction(CardGame.Card drawn, CardGame.Card discarded, String fHand, String ufHand) {
+        //temp debug
+        System.out.println("player " + playerNumber + "\n\thand favoured: "+fHand+"\n\thand unfavoured: "+ufHand+
+                           "\n\tdraws a " + drawn.getNumber() +
+                           " from deck " + leftDeck.getDeckNumber() + "\n\t" +
+                           "discards a " + discarded.getNumber() + " to deck " + rightDeck.getDeckNumber() + "\n\t");
+
+    }
+
+    private static String handToString(ArrayList<CardGame.Card> hand) {
+        String handString = "";
+        for (CardGame.Card card : hand) {
+            handString += card.getNumber() + " ";
+        }
+        return handString;
     }
 
     private void winAndExit() {

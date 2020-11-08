@@ -2,10 +2,7 @@ package cardgame;
 
 import java.io.*;
 
-import java.util.InputMismatchException;
-import java.util.Stack;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,6 +18,7 @@ public class CardGame {
     private Card[] pack;
     private Player[] players;
     private CardDeck[] decks;
+    private Thread[] playerThreads;
 
     /**
      * Executable main method
@@ -73,7 +71,7 @@ public class CardGame {
                     break;
                 } else {
                     System.out.println("The provided file is not valid; either it doesn't have enough values, or" +
-                                       "one of the lines is not a positive integer.");
+                                       " one of the lines is not a positive integer.");
                 }
             } else {
                 System.out.println("Invalid filename.");
@@ -87,6 +85,60 @@ public class CardGame {
      */
     private void run() {
         numberOfPlayers = inputFromUserNumberOfPlayers();
+
+        //set pack file and populate pack attribute with cards
+        inputFromUserPackPath();
+
+        //initialise decks
+        decks = new CardDeck[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++) decks[i] = new CardDeck(i+1);
+
+
+
+        //initialise players
+        players = new Player[numberOfPlayers];
+        for(int i = 0; i < numberOfPlayers; i++) {
+            //i is index, actual player number/deck number is i+1
+            CardDeck leftDeck = decks[i];
+            CardDeck rightDeck = decks[((i+1) % numberOfPlayers)];
+            Player player = new Player(i+1,this,leftDeck,rightDeck);
+            players[i] = player;
+        }
+
+        //split pack into two equal halves; one half for players, other half for decks
+        Card[] playerCards = new Card[numberOfPlayers * 4];
+        Card[] deckCards   = new Card[numberOfPlayers * 4];
+
+        for(int i = 0; i < numberOfPlayers * 4; i++) {
+            playerCards[i] = pack[i];
+            deckCards[i]   = pack[i + (numberOfPlayers*4)];
+        }
+
+        //deal the cards
+        roundRobinDeal(players, playerCards);
+        roundRobinDeal(decks, deckCards);
+
+        //make player threads
+        playerThreads = new Thread[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++) playerThreads[i] = new Thread(players[i]);
+
+
+        //start the threads
+        for (Thread thread : playerThreads) thread.start();
+
+
+        //wait on player threads to finish
+        for (Thread thread: playerThreads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) { }
+        }
+
+        //make output files for each deck
+        for (CardDeck deck : decks) deck.createOutputFile();
+
+        //DEBUG: output winning player number
+        System.out.println(winner.get());
 
     }
 
@@ -118,14 +170,18 @@ public class CardGame {
                         value = Integer.parseInt(line);
                     } catch (NumberFormatException e) {
                         //value is not a number; pack is invalid
-                        reader.close();//TODO: might throw an exception, which we don't care nor want
+                        try {
+                            reader.close();
+                        } catch (IOException ioe) { }
                         return false;
                     }
                     if (value > 0) {
                         pack[index] = new CardGame.Card(value);
                     } else {
                         //negative/zero value integer; pack is invalid
-                        reader.close();
+                        try {
+                            reader.close();
+                        } catch (IOException ioe) { }
                         return false;
                     }
                 }
@@ -185,10 +241,12 @@ public class CardGame {
      * @param cardReceivers array of decks/players
      *
      */
-    private static void roundRobinDeal(CardReceiver[] cardReceivers, Stack<Card> pack) {
+    private static void roundRobinDeal(CardReceiver[] cardReceivers, Card[] pack) {
+        int index = 0;
         for (int i=0; i<4; i++){
             for(CardReceiver receiver : cardReceivers){
-                receiver.appendCard(pack.pop());
+                receiver.appendCard(pack[index]);
+                index++;
             }
         }
     }
