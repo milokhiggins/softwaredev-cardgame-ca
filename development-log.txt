@@ -10,8 +10,9 @@ Date        Time       Duration  Driver (coder)      Navigator (reviewer)
 06/11/20    15:10      1 hour    Milo                Sarah
 06/11/20    18:30      1.5 hours Milo                Sarah
 07/11/20    9:03       3 hours   Sarah               Milo
-07/11/20    4:00       1.5 hours Milo                Sarah
-
+07/11/20    16:00      1.5 hours Milo                Sarah
+08/11/20    13:00      2 hours   Milo                Sarah
+08/11/20    15:40      2 hours   Sarah               Milo
 running total (as coder):
-    Milo    15
-    Sarah   14
+    Milo    17
+    Sarah   16

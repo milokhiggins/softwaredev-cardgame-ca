@@ -9,6 +9,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import static cardgame.Util.invokeMethod;
 import static org.junit.Assert.*;
@@ -273,6 +275,43 @@ public class PlayerTest {
         unfavouredHand.set(player, hand);
         Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
+    }
+
+    @Test
+    public void testMarkAction() throws Exception {
+        CardGame.Card drawn = new CardGame.Card(3);
+        CardGame.Card discard = new CardGame.Card(4);
+        invokeMethod(player, "markAction", drawn, discard);
+
+        Field log = player.getClass().getDeclaredField("log");
+        log.setAccessible(true);
+        ArrayList<String> actualResult = (ArrayList<String>) log.get(player);
+
+        String[] expectedResult = { "Player 1 draws a 3 from deck 1",
+                     "Player 1 discards a 4 to deck 2",
+                     "Player 1 current hand: "
+        };
+
+        assertArrayEquals(expectedResult, actualResult.toArray());
+    }
+
+    @Test
+    public void testHandToString() throws Exception {
+        Field unfavouredHandField = player.getClass().getDeclaredField("unfavouredHand");
+        unfavouredHandField.setAccessible(true);
+        ArrayList<CardGame.Card> unfavouredHand = new ArrayList<CardGame.Card>(Arrays.asList(new CardGame.Card(3),
+                new CardGame.Card(8)));
+        unfavouredHandField.set(player, unfavouredHand);
+        Field favouredHandField = player.getClass().getDeclaredField("favouredHand");
+        favouredHandField.setAccessible(true);
+        ArrayList<CardGame.Card> favouredHand = new ArrayList<CardGame.Card>(Arrays.asList(new CardGame.Card(1),
+                new CardGame.Card(1)));
+        favouredHandField.set(player, favouredHand);
+
+        String actualResult = (String)invokeMethod(player, "handToString");
+
+        assertEquals("1 1 3 8 ", actualResult);
+
     }
 
 }

@@ -1,5 +1,7 @@
 package cardgame;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,6 +22,7 @@ public class Player implements Runnable, CardReceiver {
     private Random rand = new Random();
     private Boolean gameOver = false;
     private Boolean hasWon = false;
+    private ArrayList<String> log = new ArrayList<>();
 
 
     /**
@@ -39,6 +42,7 @@ public class Player implements Runnable, CardReceiver {
      * Run the player thread.
      */
     public void run() {
+        log.add("Player "+ playerNumber + " initial hand: " + handToString());
         while (!gameOver){
             if (checkIfWon()){
                 boolean success = game.winner.compareAndSet(0, playerNumber);
@@ -53,14 +57,12 @@ public class Player implements Runnable, CardReceiver {
                 break;
             }
             if (leftDeck.isNotEmpty()) {
-                String fh = handToString(favouredHand);
-                String ufh = handToString(unfavouredHand);
                 CardGame.Card drawnCard = leftDeck.takeCard();
                 appendCard(drawnCard);
                 int index = rand.nextInt(unfavouredHand.size());
                 CardGame.Card discardCard = unfavouredHand.remove(index);
                 rightDeck.addCard(discardCard);
-                markAction(drawnCard, discardCard, fh, ufh);
+                markAction(drawnCard, discardCard);
             }else{
                 synchronized (leftDeck){
                     try {
@@ -74,18 +76,18 @@ public class Player implements Runnable, CardReceiver {
 
     }
 
-    private void markAction(CardGame.Card drawn, CardGame.Card discarded, String fHand, String ufHand) {
-        //temp debug
-        System.out.println("player " + playerNumber + "\n\thand favoured: "+fHand+"\n\thand unfavoured: "+ufHand+
-                           "\n\tdraws a " + drawn.getNumber() +
-                           " from deck " + leftDeck.getDeckNumber() + "\n\t" +
-                           "discards a " + discarded.getNumber() + " to deck " + rightDeck.getDeckNumber() + "\n\t");
-
+    private void markAction(CardGame.Card drawn, CardGame.Card discarded) {
+       log.add(String.format("Player %d draws a %d from deck %d", playerNumber, drawn.getNumber(), leftDeck.getDeckNumber()));
+       log.add(String.format("Player %d discards a %d to deck %d", playerNumber, discarded.getNumber(), rightDeck.getDeckNumber()));
+       log.add(String.format("Player %d current hand: %s", playerNumber, handToString()));
     }
 
-    private static String handToString(ArrayList<CardGame.Card> hand) {
+    private String handToString() {
         String handString = "";
-        for (CardGame.Card card : hand) {
+        for (CardGame.Card card : favouredHand) {
+            handString += card.getNumber() + " ";
+        }
+        for (CardGame.Card card : unfavouredHand) {
             handString += card.getNumber() + " ";
         }
         return handString;
@@ -94,13 +96,36 @@ public class Player implements Runnable, CardReceiver {
     private void winAndExit() {
         hasWon = true;
         gameOver = true;
+        log.add(String.format("Player %d wins \nPlayer %d Exits\nPlayer %d final hand %s",
+                              playerNumber, playerNumber, playerNumber, handToString()));
 
     }
 
     private void loseAndExit() {
         gameOver = true;
+        log.add(String.format("Player %d has informed player %d that player %d has won",
+                              game.winner.get(), playerNumber, game.winner.get()));
+        log.add(String.format("Player %d Exits\nPlayer %d final hand %s",
+                              playerNumber, playerNumber, handToString()));
     }
 
+    private void createLog() {
+        FileWriter myWriter = null;
+        try {
+            myWriter = new FileWriter("player" + playerNumber + "_output.txt");
+            String newline = System.lineSeparator();
+            for (String line : log) {
+                myWriter.write(line + newline);
+            }
+        }catch (IOException e){
+            System.out.print("IOException while trying to make output file.");
+            return;
+        } finally {
+            try {
+                myWriter.close();
+            }catch(IOException e){}
+        }
+    }
 
     /**
      * Receive a card.
