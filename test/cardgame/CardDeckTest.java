@@ -1,5 +1,6 @@
 package cardgame;
 
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 
@@ -9,6 +10,8 @@ import org.junit.Before;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
@@ -108,7 +111,25 @@ public class CardDeckTest {
 
     @Test
     public void testCreateOutputFile() throws Exception {
-        cardDeck.createOutputFile();
+        CardGame.Card card1 = new CardGame.Card(1);
+        CardGame.Card card2 = new CardGame.Card(2);
+        CardGame.Card card3 = new CardGame.Card(3);
+        CardGame.Card card4 = new CardGame.Card(4);
+
+        ArrayDeque<CardGame.Card> testContents =  new ArrayDeque<CardGame.Card> (Arrays.asList(card1, card2, card3, card4));
+        Util.setField(cardDeck, "contents", testContents);
+
+        Util.invokeMethod(cardDeck, "createOutputFile");
+
+        //check the the output file exists
+        File deckOutputFile = new File("deck3_output.txt");
+        assertTrue(deckOutputFile.isFile());
+
+        //read contents of file
+        BufferedReader reader = new BufferedReader(new FileReader("deck3_output.txt"));
+        String line1 = reader.readLine();
+        reader.close();
+        assertEquals("deck3 content 1 2 3 4", line1);
     }
 
     @Test
