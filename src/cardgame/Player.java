@@ -29,7 +29,7 @@ public class Player implements Runnable, CardReceiver {
     /**
      * Constructs a player with the given number, left deck and right deck.
      * @param number    player number
-     * @param game CardGame instance player is associated with
+     * @param game      CardGame instance player is associated with
      * @param leftDeck  deck to the left of the player
      * @param rightDeck deck to the right of the player
      */
@@ -97,7 +97,7 @@ public class Player implements Runnable, CardReceiver {
      * Adds player draw and discard actions to log.
      * Uses hand string method to convert the players current hand into a string.
      *
-     * @param drawn Card which player drew
+     * @param drawn     Card which player drew
      * @param discarded Card which player discarded
      */
     private void markAction(CardGame.Card drawn, CardGame.Card discarded) {
