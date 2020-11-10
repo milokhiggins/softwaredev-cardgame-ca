@@ -254,7 +254,11 @@ public class CardGame {
     /**
      * Notify all waiting players
      */
-    private void notifyAllPlayers() {
-
+    public void notifyAllPlayers() {
+        for (CardDeck deck : decks) {
+            synchronized (deck) {
+                deck.notify();
+            }
+        }
     }
 }

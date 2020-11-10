@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import static cardgame.Util.getMethodByName;
 import static cardgame.Util.invokeMethod;
@@ -292,6 +293,37 @@ public class CardGameTest {
         }
         myWriter.close();
         return cardDeckFile;
+    }
+
+    @Test
+    public void testNotifyAllPlayers() throws Exception {
+        CardGame game = new CardGame();
+        CardDeck mockLeftDeck = new CardDeck(1);
+        CardDeck mockRightDeck = new CardDeck(2);
+        Player player1 = new Player(1,game, mockLeftDeck, mockRightDeck);
+        Player player2 = new Player(2,game, mockRightDeck, mockLeftDeck);
+        Util.setField(game,"players",new Player[]{player1, player2});
+        Util.setField(game,"decks", new CardDeck[]{mockLeftDeck, mockRightDeck});
+        Thread player1Thread = new Thread(player1);
+        Thread player2Thread = new Thread(player2);
+        //start player threads; should immediately wait on the deck, because no cards have been dealt yet
+        player1Thread.start();
+        player2Thread.start();
+        //yield and wait for a little while to ensure player threads have reached wait point
+        Thread.sleep(100);
+        //set the winner so the player threads exit
+        game.winner.set(3);
+        Thread.sleep(100);
+        game.notifyAllPlayers();
+        //sleep again just to be certain all the player threads were notified
+        Thread.sleep(100);
+
+        Thread.State player1State = player1Thread.getState();
+        Thread.State player2State = player2Thread.getState();
+
+        assertSame(Thread.State.TERMINATED, player1State);
+        assertSame(Thread.State.TERMINATED, player2State);
+
     }
 
 }

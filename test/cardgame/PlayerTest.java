@@ -4,6 +4,10 @@ import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
@@ -12,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import static cardgame.Util.invokeMethod;
+
+import cardgame.Util;
+
 import static org.junit.Assert.*;
 
 public class PlayerTest {
@@ -229,7 +235,7 @@ public class PlayerTest {
             hand.add(new CardGame.Card (1));
         }
         favouredHand.set(player, hand);
-        assertTrue((Boolean) invokeMethod(player, "checkIfWon"));
+        assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
     }
 
     @Test
@@ -243,7 +249,7 @@ public class PlayerTest {
             hand.add(new CardGame.Card (3));
         }
         unfavouredHand.set(player, hand);
-        assertTrue((Boolean) invokeMethod(player, "checkIfWon"));
+        assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
     }
 
     @Test
@@ -257,7 +263,7 @@ public class PlayerTest {
             hand.add(new CardGame.Card (1));
         }
         favouredHand.set(player, hand);
-        Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
+        Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
     }
 
@@ -273,7 +279,7 @@ public class PlayerTest {
         }
         hand.add(new CardGame.Card (7));
         unfavouredHand.set(player, hand);
-        Boolean ifWon = (Boolean) invokeMethod(player, "checkIfWon");
+        Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
     }
 
@@ -281,15 +287,14 @@ public class PlayerTest {
     public void testMarkAction() throws Exception {
         CardGame.Card drawn = new CardGame.Card(3);
         CardGame.Card discard = new CardGame.Card(4);
-        invokeMethod(player, "markAction", drawn, discard);
+        Util.invokeMethod(player, "markAction", drawn, discard);
 
-        Field log = player.getClass().getDeclaredField("log");
-        log.setAccessible(true);
-        ArrayList<String> actualResult = (ArrayList<String>) log.get(player);
+        ArrayList<String> actualResult = (ArrayList<String>) Util.getFieldByName(player, "log");
 
-        String[] expectedResult = { "Player 1 draws a 3 from deck 1",
-                     "Player 1 discards a 4 to deck 2",
-                     "Player 1 current hand: "
+        String[] expectedResult = {
+                "Player 1 draws a 3 from deck 1",
+                "Player 1 discards a 4 to deck 2",
+                "Player 1 current hand: "
         };
 
         assertArrayEquals(expectedResult, actualResult.toArray());
@@ -297,21 +302,67 @@ public class PlayerTest {
 
     @Test
     public void testHandToString() throws Exception {
-        Field unfavouredHandField = player.getClass().getDeclaredField("unfavouredHand");
-        unfavouredHandField.setAccessible(true);
-        ArrayList<CardGame.Card> unfavouredHand = new ArrayList<CardGame.Card>(Arrays.asList(new CardGame.Card(3),
+        ArrayList<CardGame.Card> unfavouredHand = new ArrayList<>(Arrays.asList(new CardGame.Card(3),
                 new CardGame.Card(8)));
-        unfavouredHandField.set(player, unfavouredHand);
-        Field favouredHandField = player.getClass().getDeclaredField("favouredHand");
-        favouredHandField.setAccessible(true);
-        ArrayList<CardGame.Card> favouredHand = new ArrayList<CardGame.Card>(Arrays.asList(new CardGame.Card(1),
-                new CardGame.Card(1)));
-        favouredHandField.set(player, favouredHand);
+        Util.setField(player, "unfavouredHand", unfavouredHand);
 
-        String actualResult = (String)invokeMethod(player, "handToString");
+        ArrayList<CardGame.Card> favouredHand = new ArrayList<>(Arrays.asList(new CardGame.Card(1),
+                new CardGame.Card(1)));
+        Util.setField(player, "favouredHand", favouredHand);
+
+        String actualResult = (String) Util.invokeMethod(player, "handToString");
 
         assertEquals("1 1 3 8 ", actualResult);
 
     }
 
+    @Test
+    public void testWinAndExit() throws Exception {
+        Util.invokeMethod(player, "winAndExit");
+
+        boolean gameOver = (boolean) Util.getFieldByName(player, "gameOver");
+        ArrayList<String> log = (ArrayList<String>) Util.getFieldByName(player, "log");
+
+        assertTrue(gameOver);
+        String entry = log.get(0);
+        assertEquals("Player 1 wins \nPlayer 1 Exits\nPlayer 1 final hand ", entry);
+
+    }
+
+    @Test
+    public void testLoseAndExit() throws Exception {
+        Util.invokeMethod(player, "loseAndExit");
+
+        boolean gameOver = (boolean) Util.getFieldByName(player, "gameOver");
+        ArrayList<String> log = (ArrayList<String>) Util.getFieldByName(player, "log");
+
+        assertTrue(gameOver);
+        String entry1 = log.get(0);
+        String entry2 = log.get(1);
+        assertEquals("Player 0 has informed player 1 that player 0 has won", entry1);
+        assertEquals("Player 1 Exits\nPlayer 1 final hand ", entry2);
+
+    }
+
+    @Test
+    public void testCreateLog() throws Exception {
+        ArrayList<String> testLog = new ArrayList<>(Arrays.asList("line 1", "line 2", "line 3"));
+        Util.setField(player, "log", testLog);
+
+        Util.invokeMethod(player, "createLog");
+
+        //check the the output file exists
+        File logFile = new File("player1_output.txt");
+        assertTrue(logFile.isFile());
+
+        //read contents of file
+        BufferedReader reader = new BufferedReader(new FileReader("player1_output.txt"));
+        String line1 = reader.readLine();
+        String line2 = reader.readLine();
+        String line3 = reader.readLine();
+        reader.close();
+        assertEquals("line 1", line1);
+        assertEquals("line 2", line2);
+        assertEquals("line 3", line3);
+    }
 }
