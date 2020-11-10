@@ -6,10 +6,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Card game Class
+ * Starts the game and aids in running and completing the game.
  *
  * Asks the user for to enter the number of players and card pack file.
- * Organises the player threads and decks and aids in running the game.
+ * Organises the player threads and decks.
  *
  * @version 1.1
  * @author SN690024245, SN680046138
@@ -38,23 +38,27 @@ public class CardGame {
     /**
      * Gets the number of players from the user.
      *
-     * Validates user input and keeps asking until they return something valid.
+     * Validates user input, keeps asking For input until  valid input is returned.
      * @return number of players
      */
     private static int inputFromUserNumberOfPlayers() {
+
+        // Takes input form the user.
         Scanner scanner = new Scanner(System.in);
         while(true) {
             System.out.print("Please enter the number of players: ");
             try {
-                // takes input form the user.
+
                 int number = scanner.nextInt();
-                //Defensive programming checks that the number of players is greater than 1 
+
+                //Checks that the user has entered a large enough number of players
                 if (number > 1) {
                     return number;
                 } else {
                     System.out.println("Number of players must be greater than 1.");
                 }
             } catch (InputMismatchException e) {
+                //Error thrown if the user enters an invalid type.
                 scanner.nextLine();
                 System.out.println("Number of players must be an integer.");
             }
@@ -62,10 +66,10 @@ public class CardGame {
     }
 
     /**
-     * Gets the file location of the pack.
+     * Gets the file location of the pack from the user.
      *
-     * Validates user input and keeps asking For input until something valid is returned returned.
-     * Uses the validPackFile method to validate the file path.
+     * Validates user input, keeps asking For input until  valid input is returned.
+     * Uses the validPackFile method to validate file path.
      *
      */
     private void inputFromUserPackPath() {
@@ -99,13 +103,10 @@ public class CardGame {
     /**
      * Main code of CardGame
      *
-     * Ask the user to enter the number of players and the location of the pack using the inputFromUser
-     * and inputFromUserPackPath methods.
-     * Populates the card deck and player arrays with card deck and player objects.
-     * Deals cards to players and decks making use of the round robin deal method.
-     * Starts the game by starting the player threads.
-     * When a player wins:
-     * run triggers the decks to create files and prints out the winner to the console.
+     * Asks user for number of players and location of pack using inputFromUser and inputFromUserPackPath methods.
+     * Populates card deck and player arrays with objects and deals cards to them using roundRobinDeal method.
+     * Starts player threads.
+     * Triggers decks to create files when a player wins and prints the winner to the console.
      */
     private void run() {
         numberOfPlayers = inputFromUserNumberOfPlayers();
@@ -166,11 +167,13 @@ public class CardGame {
     }
 
     /**
-     * Read the pack from the file.
-     * If the file isn't valid, return false. Otherwise set the pack attribute to the contents of the file.
-     * @return pack of cards
+     * Reads the pack from the file. Sets pack attribute to file contents.
+     * If file isn't valid returns false. Otherwise returns true.
+     *
+     * @return true if the file was valid.
      */
     private boolean validPackFile(String filename) throws IOException {
+        //sets the pack array size to the number of needed cards
         pack = new Card[8*numberOfPlayers];
         BufferedReader reader = null;
         try {
@@ -179,9 +182,11 @@ public class CardGame {
             //this can only happen if the the file was deleted
             System.exit(-1);
         }
+
         int index = 0;
         try {
-
+            // While loop condition turns false when needed number of cards have been input.
+            //so that too many cards are never added the game's deck.
             while (index < (8 * numberOfPlayers)) {
                 String line = reader.readLine();
                 if (line == null) {
@@ -218,55 +223,66 @@ public class CardGame {
                 //ignore exception on close
             }
         }
-        //if index is not 8n then the pack file had too few values
+        //if index is not 8n then the pack file had too few values and the pack is not valid.
         return index == (8 * numberOfPlayers);
     }
 
     /**
-     *
+     * Represents a card
      */
     static class Card {
+        //The card's Number
         private int number;
+
+        /**
+         * Constructs card object
+         * @param num card's number
+         */
         public Card(int num) {
             this.number = num;
         }
 
         /**
-         * Get the value of the card
-         * @return the card's value
+         * Gets the card's value
+         * @return the card's number
          */
         public int getNumber() {
             return this.number;
         }
 
         /**
-         * Test equality with another object
+         * Tests equality with another object
          * @param o Object to compare against
          * @return true if the object is equal, false otherwise
          */
         @Override
         public boolean equals(Object o) {
+            //checks that the object is not null
             if (o == null) {
                 return false;
             }
+            //Checks that the object is the same class
             if (this.getClass() != o.getClass()) {
                 return false;
             }
             Card other = (Card) o;
 
+            //checks that numbers match
             return Objects.equals(this.number, other.getNumber());
         }
     }
 
     /**
-     * Deal cards using round-robin style deal
+     * Deals cards using round-robin style deal
      * @param pack          array of cards to deal
-     * @param cardReceivers array of decks/players
+     * @param cardReceivers array of decks or players
      *
      */
     private static void roundRobinDeal(CardReceiver[] cardReceivers, Card[] pack) {
+        //index used to traverse cards in pack
         int index = 0;
         for (int i=0; i<4; i++){
+            //Below one card is dealt to each card receiver
             for(CardReceiver receiver : cardReceivers){
                 receiver.appendCard(pack[index]);
                 index++;
@@ -275,9 +291,11 @@ public class CardGame {
     }
 
     /**
-     * Notify all waiting players
+     * Stops players waiting to pick up continuing to run when the game is finished.
+     * Is called by winning player.
      */
     public void notifyAllPlayers() {
+        //notifies all decks
         for (CardDeck deck : decks) {
             synchronized (deck) {
                 deck.notify();
