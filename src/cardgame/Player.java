@@ -10,7 +10,6 @@ import java.util.Random;
  *
  * Plays the game
  * @version 1.1
- * @author SN690024245, SN680046138
  */
 public class Player implements Runnable, CardReceiver {
     private int playerNumber;

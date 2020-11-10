@@ -1,20 +1,19 @@
 package cardgame;
 
 /**
- *
  * Implemented in order to use mock object CardDecks to test code.
  */
 public interface CardDeckInterface {
 
     /**
      * Card is popped off top of card deck and returned to caller.
-     * @return
+     * @return card from top of deck
      */
     CardGame.Card takeCard();
 
     /**
      *Card is added to the bottom of the deck by caller.
-     * @param card
+     * @param card card to add
      */
     void addCard(CardGame.Card card);
 
@@ -25,13 +24,13 @@ public interface CardDeckInterface {
 
     /**
      * Checks if the deck is empty.
-     * @return
+     * @return true if not empty; false otherwise
      */
     boolean isNotEmpty();
 
     /**
-     * Gets the decks number.
-     * @return
+     * Gets the deck's number.
+     * @return deck's number
      */
     int getDeckNumber();
 }

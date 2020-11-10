@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Organises the player threads and decks.
  *
  * @version 1.1
- * @author SN690024245, SN680046138
  */
 public class CardGame {
 
