@@ -14,12 +14,14 @@ import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
-import cardgame.Util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class PlayerTest {
 
@@ -94,9 +96,8 @@ public class PlayerTest {
 
         Thread.sleep(100);
 
-        Field favouredHandField = player.getClass().getDeclaredField("favouredHand");
-        favouredHandField.setAccessible(true);
-        ArrayList<CardGame.Card> favouredHand = (ArrayList<CardGame.Card>) favouredHandField.get(player);
+        ArrayList<CardGame.Card> favouredHand
+                = (ArrayList<CardGame.Card>) Util.getFieldByName(player, "favouredHand");
         CardGame.Card[] expectedHand = new CardGame.Card[] {
                 new CardGame.Card(1),
                 new CardGame.Card(1)
@@ -120,8 +121,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunUnfavouredCard() throws AssertionError, InterruptedException, NoSuchFieldException,
-            IllegalAccessException {
+    public void testRunUnfavouredCard() throws AssertionError, InterruptedException {
         givePlayerCards(1, 3, 3, 3);
 
         Thread playerThread = new Thread(player);
@@ -130,15 +130,11 @@ public class PlayerTest {
 
         Thread.sleep(100);
 
-        Field unfavouredHandField = player.getClass().getDeclaredField("unfavouredHand");
-        unfavouredHandField.setAccessible(true);
-        ArrayList<CardGame.Card> unfavouredHand = (ArrayList<CardGame.Card>) unfavouredHandField.get(player);
-
         assertEquals(1,mockRightDeck.contents.size());
         int discardCardValue = mockRightDeck.contents.peek().getNumber();
 
-        //convert hand to array, compare each element
-        assertTrue(discardCardValue== 3 || discardCardValue== 4 );
+        //player should discard either 3 or 4
+        assertTrue(discardCardValue == 3 || discardCardValue == 4 );
     }
 
     @Test
@@ -173,10 +169,10 @@ public class PlayerTest {
 
     @Test
     public void testRunUnfavouredWin() throws Exception {
-        Field randomField = player.getClass().getDeclaredField("rand");
-        randomField.setAccessible(true);
+        //seed random object; output of next call to rand.nextInt(5) (should always) be 2
+        //so player will discard the 7, giving them four 9's; a winning hand of unfavoured cards
         Random random = new Random(23);
-        randomField.set(player, random);
+        Util.setField(player, "rand", random);
         givePlayerCards(9, 9, 7, 9);
         mockLeftDeck.addCard(new CardGame.Card(9));
         Thread playerThread = new Thread(player);
@@ -205,11 +201,7 @@ public class PlayerTest {
     private void genericAppendCardTest(int num, String fieldName) throws Exception {
         player.appendCard(new CardGame.Card(num));
 
-        //get private field
-        Field handField = player.getClass().getDeclaredField(fieldName);
-        //hand is private; set accessible
-        handField.setAccessible(true);
-        ArrayList<CardGame.Card> hand = (ArrayList<CardGame.Card>) handField.get(player);
+        ArrayList<CardGame.Card> hand = (ArrayList<CardGame.Card>) Util.getFieldByName(player, fieldName);
         assertEquals(1, hand.size());
         assertEquals(new CardGame.Card(num), hand.get(0));
     }
@@ -226,59 +218,44 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonFavouredWin() throws  Exception {
-        //get private field
-        Field favouredHand = player.getClass().getDeclaredField("favouredHand");
-        //hand is private; set accessible
-        favouredHand.setAccessible(true);
         ArrayList<CardGame.Card> hand = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             hand.add(new CardGame.Card (1));
         }
-        favouredHand.set(player, hand);
+        Util.setField(player, "favouredHand", hand);
         assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
     }
 
     @Test
     public void testCheckIfWonUnfavouredWin() throws  Exception {
-        //get private field
-        Field unfavouredHand = player.getClass().getDeclaredField("unfavouredHand");
-        //hand is private; set accessible
-        unfavouredHand.setAccessible(true);
         ArrayList<CardGame.Card> hand = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             hand.add(new CardGame.Card (3));
         }
-        unfavouredHand.set(player, hand);
+        Util.setField(player, "unfavouredHand", hand);
         assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
     }
 
     @Test
     public void testCheckIfWonFavouredLoss() throws  Exception {
-        //get private field
-        Field favouredHand = player.getClass().getDeclaredField("favouredHand");
-        //hand is private; set accessible
-        favouredHand.setAccessible(true);
         ArrayList<CardGame.Card> hand = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             hand.add(new CardGame.Card (1));
         }
-        favouredHand.set(player, hand);
+        Util.setField(player, "favouredHand", hand);
         Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
     }
 
     @Test
     public void testCheckIfWonUnfavouredLoss() throws  Exception {
-        //get private field
-        Field unfavouredHand = player.getClass().getDeclaredField("unfavouredHand");
-        //hand is private; set accessible
-        unfavouredHand.setAccessible(true);
         ArrayList<CardGame.Card> hand = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             hand.add(new CardGame.Card (3));
         }
         hand.add(new CardGame.Card (7));
-        unfavouredHand.set(player, hand);
+
+        Util.setField(player, "unfavouredHand", hand);
         Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
         assertFalse(ifWon);
     }
