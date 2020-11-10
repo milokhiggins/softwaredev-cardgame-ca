@@ -97,6 +97,8 @@ public class Player implements Runnable, CardReceiver {
         log.add(String.format("Player %d wins \nPlayer %d Exits\nPlayer %d final hand %s",
                               playerNumber, playerNumber, playerNumber, handToString()));
         createLog();
+        //notify any players waiting on a deck.
+        game.notifyAllPlayers();
     }
 
     private void loseAndExit() {
