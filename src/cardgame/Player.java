@@ -2,6 +2,7 @@ package cardgame;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,10 +17,9 @@ public class Player implements Runnable, CardReceiver {
     private CardGame game;
     //Player's hand made up of two arrays:
     private ArrayList<CardGame.Card> favouredHand = new ArrayList<>();
-    private ArrayList<CardGame.Card> unfavouredHand = new ArrayList<>();
+    private ArrayDeque<CardGame.Card> unfavouredHand = new ArrayDeque<>();
     private CardDeckInterface leftDeck;
     private CardDeckInterface rightDeck;
-    private Random rand = new Random();
     //Flag used to Stop thread from running.
     private Boolean gameOver = false;
     private ArrayList<String> log = new ArrayList<>();
@@ -73,8 +73,7 @@ public class Player implements Runnable, CardReceiver {
                 CardGame.Card drawnCard = leftDeck.takeCard();
                 appendCard(drawnCard);
                 //Discards unfavoured card
-                int index = rand.nextInt(unfavouredHand.size());
-                CardGame.Card discardCard = unfavouredHand.remove(index);
+                CardGame.Card discardCard = unfavouredHand.remove();
                 rightDeck.addCard(discardCard);
                 //Action passed to the log.
                 markAction(drawnCard, discardCard);
@@ -200,7 +199,7 @@ public class Player implements Runnable, CardReceiver {
             return true;
             // Checks if all the cards in the unfavoured hand are the same.
         } else if(unfavouredHand.size()==4) {
-            int value = unfavouredHand.get(0).getNumber();
+            int value = unfavouredHand.peekFirst().getNumber();
             for (CardGame.Card i : unfavouredHand) {
                 if (i.getNumber() != value) {
                     return false;

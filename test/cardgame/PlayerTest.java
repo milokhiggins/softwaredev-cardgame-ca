@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -56,7 +57,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHandWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
+    public void testRunStartHaFndWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new CardGame.Card(3));
         }
@@ -173,11 +174,7 @@ public class PlayerTest {
 
     @Test
     public void testRunUnfavouredWin() throws Exception {
-        //seed random object; output of next call to rand.nextInt(5) (should always) be 2
-        //so player will discard the 7, giving them four 9's; a winning hand of unfavoured cards
-        Random random = new Random(23);
-        Util.setField(player, "rand", random);
-        givePlayerCards(9, 9, 7, 9);
+        givePlayerCards(7, 9, 9, 9);
         mockLeftDeck.addCard(new CardGame.Card(9));
         Thread playerThread = new Thread(player);
         playerThread.start();
@@ -202,22 +199,20 @@ public class PlayerTest {
 
     }
 
-    private void genericAppendCardTest(int num, String fieldName) throws Exception {
-        player.appendCard(new CardGame.Card(num));
-
-        ArrayList<CardGame.Card> hand = (ArrayList<CardGame.Card>) Util.getFieldByName(player, fieldName);
-        assertEquals(1, hand.size());
-        assertEquals(new CardGame.Card(num), hand.get(0));
-    }
-
     @Test
     public void testAppendCardFavoured() throws Exception {
-        genericAppendCardTest(1,"favouredHand");
+        player.appendCard(new CardGame.Card(1));
+        ArrayList<CardGame.Card> hand = (ArrayList<CardGame.Card>) Util.getFieldByName(player, "favouredHand");
+        assertEquals(1, hand.size());
+        assertEquals(new CardGame.Card(1), hand.get(0));
     }
 
     @Test
     public void testAppendCardUnfavoured() throws Exception {
-        genericAppendCardTest(3,"unfavouredHand");
+        player.appendCard(new CardGame.Card(3));
+        ArrayDeque<CardGame.Card> hand = (ArrayDeque<CardGame.Card>) Util.getFieldByName(player, "unfavouredHand");
+        assertEquals(1, hand.size());
+        assertEquals(new CardGame.Card(3), hand.peekFirst());
     }
 
     @Test
@@ -232,7 +227,7 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonUnfavouredWin() throws  Exception {
-        ArrayList<CardGame.Card> hand = new ArrayList<>();
+        ArrayDeque<CardGame.Card> hand = new ArrayDeque<>();
         for (int i = 0; i < 4; i++) {
             hand.add(new CardGame.Card (3));
         }
@@ -253,7 +248,7 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonUnfavouredLoss() throws  Exception {
-        ArrayList<CardGame.Card> hand = new ArrayList<>();
+        ArrayDeque<CardGame.Card> hand = new ArrayDeque<>();
         for (int i = 0; i < 3; i++) {
             hand.add(new CardGame.Card (3));
         }
@@ -283,7 +278,7 @@ public class PlayerTest {
 
     @Test
     public void testHandToString() throws Exception {
-        ArrayList<CardGame.Card> unfavouredHand = new ArrayList<>(Arrays.asList(new CardGame.Card(3),
+        ArrayDeque<CardGame.Card> unfavouredHand = new ArrayDeque<>(Arrays.asList(new CardGame.Card(3),
                 new CardGame.Card(8)));
         Util.setField(player, "unfavouredHand", unfavouredHand);
 
