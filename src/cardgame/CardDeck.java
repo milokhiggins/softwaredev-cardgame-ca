@@ -1,5 +1,7 @@
 package cardgame;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayDeque;
 
 /**
@@ -39,7 +41,24 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * Make the deck's output/log file
      */
     public void createOutputFile() {
-
+        FileWriter myWriter = null;
+        try {
+            myWriter = new FileWriter("deck" + deckNumber + "_output.txt");
+            String newline = System.lineSeparator();
+            String line = "deck" + deckNumber + " content";
+            for (CardGame.Card card : contents) {
+                line += " " + card.getNumber();
+            }
+            myWriter.write(line);
+        }catch (IOException e){
+            System.out.print("IOException while trying to make output file.");
+            return;
+        } finally {
+            try {
+                myWriter.close();
+            } catch (IOException e) {
+            }
+        }
     }
 
     /**
