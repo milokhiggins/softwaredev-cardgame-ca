@@ -6,7 +6,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Card game class etc etc
+ * Card game Class
+ *
+ * Asks the user for to enter the number of players and card pack file.
+ * Organises the player threads and decks and aids in running the game.
  *
  * @version 1.1
  * @author SN690024245, SN680046138
@@ -14,14 +17,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CardGame {
 
     private int numberOfPlayers;
-    public AtomicInteger winner =  new AtomicInteger(0);
     private Card[] pack;
     private Player[] players;
     private CardDeck[] decks;
+    // Once a player wins, contains the number belonging to the player who has won
+    public AtomicInteger winner =  new AtomicInteger(0);
     private Thread[] playerThreads;
 
     /**
      * Executable main method
+     *
+     * Creates an instance of a game and executes the non static run method.
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -30,8 +36,9 @@ public class CardGame {
     }
 
     /**
-     * Get the number of players from the user and validate their input
-     * Keep asking until they return something valid.
+     * Gets the number of players from the user.
+     *
+     * Validates user input and keeps asking until they return something valid.
      * @return number of players
      */
     private static int inputFromUserNumberOfPlayers() {
@@ -39,7 +46,9 @@ public class CardGame {
         while(true) {
             System.out.print("Please enter the number of players: ");
             try {
+                // takes input form the user.
                 int number = scanner.nextInt();
+                //Defensive programming checks that the number of players is greater than 1 
                 if (number > 1) {
                     return number;
                 } else {
@@ -52,6 +61,13 @@ public class CardGame {
         }
     }
 
+    /**
+     * Gets the file location of the pack.
+     *
+     * Validates user input and keeps asking For input until something valid is returned returned.
+     * Uses the validPackFile method to validate the file path.
+     *
+     */
     private void inputFromUserPackPath() {
         Scanner scanner = new Scanner(System.in);
         String filePath;
@@ -82,6 +98,14 @@ public class CardGame {
 
     /**
      * Main code of CardGame
+     *
+     * Ask the user to enter the number of players and the location of the pack using the inputFromUser
+     * and inputFromUserPackPath methods.
+     * Populates the card deck and player arrays with card deck and player objects.
+     * Deals cards to players and decks making use of the round robin deal method.
+     * Starts the game by starting the player threads.
+     * When a player wins:
+     * run triggers the decks to create files and prints out the winner to the console.
      */
     private void run() {
         numberOfPlayers = inputFromUserNumberOfPlayers();
@@ -137,8 +161,7 @@ public class CardGame {
         //make output files for each deck
         for (CardDeck deck : decks) deck.createOutputFile();
 
-        //DEBUG: output winning player number
-        System.out.println(winner.get());
+        System.out.println("player " + winner.get() + " wins!");
 
     }
 
