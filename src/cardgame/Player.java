@@ -8,8 +8,7 @@ import java.util.Random;
 /**
  * Represents player
  *
- * Player pick up cards from left deck ??
- *
+ * Plays the game
  * @version 1.1
  * @author SN690024245, SN680046138
  */
@@ -30,7 +29,7 @@ public class Player implements Runnable, CardReceiver {
     /**
      * Constructs a player with the given number, left deck and right deck.
      * @param number    player number
-     * @param game cardgame instance
+     * @param game CardGame instance player is associated with
      * @param leftDeck  deck to the left of the player
      * @param rightDeck deck to the right of the player
      */
@@ -42,17 +41,19 @@ public class Player implements Runnable, CardReceiver {
     }
 
     /**
-     * Run the player thread.
-     * Using check if one method
+     * Runs the player thread.
+     *
+     * Checks if player has won or lost and Invokes relevant code. Uses checkIfWon method.
+     * Implements player algorithm to pick up and put down cards and invokes actions being added to the log.
      */
     public void run() {
         //Adds initial hand to log.
         log.add("Player "+ playerNumber + " initial hand: " + handToString());
 
         while (!gameOver){
-            //checks own hand To see if won.
+            //checks player hand To see if won.
             if (checkIfWon()){
-                //Checks if the atomic winner is set to 0 sets it to player number to win the game.
+                //Checks if the atomic winner is set to 0. if it is sets to player's number to win the game.
                 // Returns False if winner variable is no longer 0.
                 boolean success = game.winner.compareAndSet(0, playerNumber);
                 if (success){
@@ -62,11 +63,12 @@ public class Player implements Runnable, CardReceiver {
                 }
                 //Ends the thread
                 break;
-            //checks if someone has won the game.
+            //checks if player has lost to another player
             } else if(game.winner.get() != 0){
                 loseAndExit();
                 break;
             }
+            //draws from leftDeck
             if (leftDeck.isNotEmpty()) {
                 //Draws card
                 CardGame.Card drawnCard = leftDeck.takeCard();
@@ -129,7 +131,7 @@ public class Player implements Runnable, CardReceiver {
         log.add(String.format("Player %d wins \nPlayer %d Exits\nPlayer %d final hand %s",
                               playerNumber, playerNumber, playerNumber, handToString()));
         createLog();
-        //notifys any players waiting on a deck that the game has finished.
+        //Notifys any players waiting on a deck that the game has finished.
         game.notifyAllPlayers();
     }
 
