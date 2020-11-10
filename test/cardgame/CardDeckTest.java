@@ -44,7 +44,7 @@ public class CardDeckTest {
         assertSame(card1, returnCard1);
 
         CardGame.Card returnCard2 = cardDeck.takeCard();
-        assertSame(card1, returnCard2);
+        assertSame(card2, returnCard2);
 
         CardGame.Card returnCard3 = cardDeck.takeCard();
         assertSame(card3, returnCard3);

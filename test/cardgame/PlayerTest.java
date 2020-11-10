@@ -36,10 +36,12 @@ public class PlayerTest {
         }
     }
     @Before
-    public void setUp() {
+    public void setUp() throws IllegalAccessException, NoSuchFieldException {
         mockLeftDeck = new MockCardDeck(1);
         mockRightDeck = new MockCardDeck(2);
         game = new CardGame();
+        //prevent for each loop on game.decks throwing NullPointerException
+        Util.setField(game, "decks", new CardDeck[]{new CardDeck(1)});
         player = new Player(1, game, mockLeftDeck, mockRightDeck);
     }
 
@@ -54,10 +56,11 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHandWinUnfavoured() throws AssertionError {
+    public void testRunStartHandWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new CardGame.Card(3));
         }
+        Util.setField(game, "decks", new CardDeck[0]);
         player.run();
         //assert that the player has set the winner attribute to their own value
         assertEquals(1, game.winner.get());
@@ -65,10 +68,11 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHandWinFavoured() throws AssertionError {
+    public void testRunStartHandWinFavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new CardGame.Card(1));
         }
+        Util.setField(game, "decks", new CardDeck[0]);
         player.run();
         //assert that the player has set the winner attribute to their own value
         assertEquals(1, game.winner.get());
@@ -295,6 +299,7 @@ public class PlayerTest {
 
     @Test
     public void testWinAndExit() throws Exception {
+        Util.setField(game, "decks", new CardDeck[0]);
         Util.invokeMethod(player, "winAndExit");
 
         boolean gameOver = (boolean) Util.getFieldByName(player, "gameOver");
