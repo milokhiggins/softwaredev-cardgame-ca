@@ -21,7 +21,6 @@ public class Player implements Runnable, CardReceiver {
     private CardGame game;
     private Random rand = new Random();
     private Boolean gameOver = false;
-    private Boolean hasWon = false;
     private ArrayList<String> log = new ArrayList<>();
 
 
@@ -94,11 +93,10 @@ public class Player implements Runnable, CardReceiver {
     }
 
     private void winAndExit() {
-        hasWon = true;
         gameOver = true;
         log.add(String.format("Player %d wins \nPlayer %d Exits\nPlayer %d final hand %s",
                               playerNumber, playerNumber, playerNumber, handToString()));
-
+        createLog();
     }
 
     private void loseAndExit() {
@@ -107,6 +105,7 @@ public class Player implements Runnable, CardReceiver {
                               game.winner.get(), playerNumber, game.winner.get()));
         log.add(String.format("Player %d Exits\nPlayer %d final hand %s",
                               playerNumber, playerNumber, handToString()));
+        createLog();
     }
 
     private void createLog() {
