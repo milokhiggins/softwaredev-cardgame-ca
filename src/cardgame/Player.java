@@ -16,8 +16,8 @@ public class Player implements Runnable, CardReceiver {
     private int playerNumber;
     private CardGame game;
     //Player's hand made up of two arrays:
-    private ArrayList<CardGame.Card> favouredHand = new ArrayList<>();
-    private ArrayDeque<CardGame.Card> unfavouredHand = new ArrayDeque<>();
+    private ArrayList<Card> favouredHand = new ArrayList<>();
+    private ArrayDeque<Card> unfavouredHand = new ArrayDeque<>();
     private CardDeckInterface leftDeck;
     private CardDeckInterface rightDeck;
     //Flag used to Stop thread from running.
@@ -70,10 +70,10 @@ public class Player implements Runnable, CardReceiver {
             //draws from leftDeck
             if (leftDeck.isNotEmpty()) {
                 //Draws card
-                CardGame.Card drawnCard = leftDeck.takeCard();
+                Card drawnCard = leftDeck.takeCard();
                 appendCard(drawnCard);
                 //Discards unfavoured card
-                CardGame.Card discardCard = unfavouredHand.remove();
+                Card discardCard = unfavouredHand.remove();
                 rightDeck.addCard(discardCard);
                 //Action passed to the log.
                 markAction(drawnCard, discardCard);
@@ -98,7 +98,7 @@ public class Player implements Runnable, CardReceiver {
      * @param drawn     Card which player drew
      * @param discarded Card which player discarded
      */
-    private void markAction(CardGame.Card drawn, CardGame.Card discarded) {
+    private void markAction(Card drawn, Card discarded) {
        log.add(String.format("Player %d draws a %d from deck %d", playerNumber, drawn.getNumber(), leftDeck.getDeckNumber()));
        log.add(String.format("Player %d discards a %d to deck %d", playerNumber, discarded.getNumber(), rightDeck.getDeckNumber()));
        log.add(String.format("Player %d current hand: %s", playerNumber, handToString()));
@@ -110,10 +110,10 @@ public class Player implements Runnable, CardReceiver {
      */
     private String handToString() {
         String handString = "";
-        for (CardGame.Card card : favouredHand) {
+        for (Card card : favouredHand) {
             handString += card.getNumber() + " ";
         }
-        for (CardGame.Card card : unfavouredHand) {
+        for (Card card : unfavouredHand) {
             handString += card.getNumber() + " ";
         }
         return handString;
@@ -175,7 +175,7 @@ public class Player implements Runnable, CardReceiver {
      * Receives a card and sorts to either favoured or unfavoured hand.
      * @param card card to add
      */
-    public void appendCard(CardGame.Card card) {
+    public void appendCard(Card card) {
         int cardValue = card.getNumber();
         //Adds card favoured hand if it is the players number.
         if (cardValue == playerNumber) {
@@ -200,7 +200,7 @@ public class Player implements Runnable, CardReceiver {
             // Checks if all the cards in the unfavoured hand are the same.
         } else if(unfavouredHand.size()==4) {
             int value = unfavouredHand.peekFirst().getNumber();
-            for (CardGame.Card i : unfavouredHand) {
+            for (Card i : unfavouredHand) {
                 if (i.getNumber() != value) {
                     return false;
                 }

@@ -33,7 +33,7 @@ public class PlayerTest {
 
     private void givePlayerCards(int... values) {
         for (int i : values) {
-            player.appendCard(new CardGame.Card(i));
+            player.appendCard(new Card(i));
         }
     }
     @Before
@@ -59,7 +59,7 @@ public class PlayerTest {
     @Test
     public void testRunStartHaFndWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
-            player.appendCard(new CardGame.Card(3));
+            player.appendCard(new Card(3));
         }
         Util.setField(game, "decks", new CardDeck[0]);
         player.run();
@@ -71,7 +71,7 @@ public class PlayerTest {
     @Test
     public void testRunStartHandWinFavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
-            player.appendCard(new CardGame.Card(1));
+            player.appendCard(new Card(1));
         }
         Util.setField(game, "decks", new CardDeck[0]);
         player.run();
@@ -97,15 +97,15 @@ public class PlayerTest {
         givePlayerCards(1,3,3,3);
         Thread playerThread = new Thread(player);
         playerThread.start();
-        mockLeftDeck.addCard(new CardGame.Card(1));
+        mockLeftDeck.addCard(new Card(1));
 
         Thread.sleep(100);
 
-        ArrayList<CardGame.Card> favouredHand
-                = (ArrayList<CardGame.Card>) Util.getFieldByName(player, "favouredHand");
-        CardGame.Card[] expectedHand = new CardGame.Card[] {
-                new CardGame.Card(1),
-                new CardGame.Card(1)
+        ArrayList<Card> favouredHand
+                = (ArrayList<Card>) Util.getFieldByName(player, "favouredHand");
+        Card[] expectedHand = new Card[] {
+                new Card(1),
+                new Card(1)
         };
         //convert hand to array, compare each element
         assertArrayEquals(expectedHand, favouredHand.toArray());
@@ -117,7 +117,7 @@ public class PlayerTest {
 
         Thread playerThread = new Thread(player);
         playerThread.start();
-        mockLeftDeck.addCard(new CardGame.Card(1));
+        mockLeftDeck.addCard(new Card(1));
 
         Thread.sleep(100);
 
@@ -131,7 +131,7 @@ public class PlayerTest {
 
         Thread playerThread = new Thread(player);
         playerThread.start();
-        mockLeftDeck.addCard(new CardGame.Card(4));
+        mockLeftDeck.addCard(new Card(4));
 
         Thread.sleep(100);
 
@@ -147,7 +147,7 @@ public class PlayerTest {
         givePlayerCards(1, 3, 3, 3);
         Thread playerThread = new Thread(player);
         playerThread.start();
-        mockLeftDeck.addCard(new CardGame.Card(3));
+        mockLeftDeck.addCard(new Card(3));
 
         Thread.sleep(100);
 
@@ -160,8 +160,8 @@ public class PlayerTest {
     public void testRunFavouredWin() throws Exception {
         givePlayerCards(1, 1, 5, 7);
         Thread playerThread = new Thread(player);
-        mockLeftDeck.addCard(new CardGame.Card(1));
-        mockLeftDeck.addCard(new CardGame.Card(1));
+        mockLeftDeck.addCard(new Card(1));
+        mockLeftDeck.addCard(new Card(1));
         playerThread.start();
         Thread.sleep(100);
 
@@ -175,7 +175,7 @@ public class PlayerTest {
     @Test
     public void testRunUnfavouredWin() throws Exception {
         givePlayerCards(7, 9, 9, 9);
-        mockLeftDeck.addCard(new CardGame.Card(9));
+        mockLeftDeck.addCard(new Card(9));
         Thread playerThread = new Thread(player);
         playerThread.start();
         Thread.sleep(100);
@@ -201,25 +201,25 @@ public class PlayerTest {
 
     @Test
     public void testAppendCardFavoured() throws Exception {
-        player.appendCard(new CardGame.Card(1));
-        ArrayList<CardGame.Card> hand = (ArrayList<CardGame.Card>) Util.getFieldByName(player, "favouredHand");
+        player.appendCard(new Card(1));
+        ArrayList<Card> hand = (ArrayList<Card>) Util.getFieldByName(player, "favouredHand");
         assertEquals(1, hand.size());
-        assertEquals(new CardGame.Card(1), hand.get(0));
+        assertEquals(new Card(1), hand.get(0));
     }
 
     @Test
     public void testAppendCardUnfavoured() throws Exception {
-        player.appendCard(new CardGame.Card(3));
-        ArrayDeque<CardGame.Card> hand = (ArrayDeque<CardGame.Card>) Util.getFieldByName(player, "unfavouredHand");
+        player.appendCard(new Card(3));
+        ArrayDeque<Card> hand = (ArrayDeque<Card>) Util.getFieldByName(player, "unfavouredHand");
         assertEquals(1, hand.size());
-        assertEquals(new CardGame.Card(3), hand.peekFirst());
+        assertEquals(new Card(3), hand.peekFirst());
     }
 
     @Test
     public void testCheckIfWonFavouredWin() throws  Exception {
-        ArrayList<CardGame.Card> hand = new ArrayList<>();
+        ArrayList<Card> hand = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            hand.add(new CardGame.Card (1));
+            hand.add(new Card (1));
         }
         Util.setField(player, "favouredHand", hand);
         assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
@@ -227,9 +227,9 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonUnfavouredWin() throws  Exception {
-        ArrayDeque<CardGame.Card> hand = new ArrayDeque<>();
+        ArrayDeque<Card> hand = new ArrayDeque<>();
         for (int i = 0; i < 4; i++) {
-            hand.add(new CardGame.Card (3));
+            hand.add(new Card (3));
         }
         Util.setField(player, "unfavouredHand", hand);
         assertTrue((Boolean) Util.invokeMethod(player, "checkIfWon"));
@@ -237,9 +237,9 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonFavouredLoss() throws  Exception {
-        ArrayList<CardGame.Card> hand = new ArrayList<>();
+        ArrayList<Card> hand = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            hand.add(new CardGame.Card (1));
+            hand.add(new Card (1));
         }
         Util.setField(player, "favouredHand", hand);
         Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
@@ -248,11 +248,11 @@ public class PlayerTest {
 
     @Test
     public void testCheckIfWonUnfavouredLoss() throws  Exception {
-        ArrayDeque<CardGame.Card> hand = new ArrayDeque<>();
+        ArrayDeque<Card> hand = new ArrayDeque<>();
         for (int i = 0; i < 3; i++) {
-            hand.add(new CardGame.Card (3));
+            hand.add(new Card (3));
         }
-        hand.add(new CardGame.Card (7));
+        hand.add(new Card (7));
 
         Util.setField(player, "unfavouredHand", hand);
         Boolean ifWon = (Boolean) Util.invokeMethod(player, "checkIfWon");
@@ -261,8 +261,8 @@ public class PlayerTest {
 
     @Test
     public void testMarkAction() throws Exception {
-        CardGame.Card drawn = new CardGame.Card(3);
-        CardGame.Card discard = new CardGame.Card(4);
+        Card drawn = new Card(3);
+        Card discard = new Card(4);
         Util.invokeMethod(player, "markAction", drawn, discard);
 
         ArrayList<String> actualResult = (ArrayList<String>) Util.getFieldByName(player, "log");
@@ -278,12 +278,12 @@ public class PlayerTest {
 
     @Test
     public void testHandToString() throws Exception {
-        ArrayDeque<CardGame.Card> unfavouredHand = new ArrayDeque<>(Arrays.asList(new CardGame.Card(3),
-                new CardGame.Card(8)));
+        ArrayDeque<Card> unfavouredHand = new ArrayDeque<>(Arrays.asList(new Card(3),
+                new Card(8)));
         Util.setField(player, "unfavouredHand", unfavouredHand);
 
-        ArrayList<CardGame.Card> favouredHand = new ArrayList<>(Arrays.asList(new CardGame.Card(1),
-                new CardGame.Card(1)));
+        ArrayList<Card> favouredHand = new ArrayList<>(Arrays.asList(new Card(1),
+                new Card(1)));
         Util.setField(player, "favouredHand", favouredHand);
 
         String actualResult = (String) Util.invokeMethod(player, "handToString");

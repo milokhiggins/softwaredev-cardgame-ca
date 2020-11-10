@@ -9,7 +9,7 @@ import java.util.ArrayDeque;
  */
 public class CardDeck implements CardDeckInterface, CardReceiver {
 
-    private ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+    private ArrayDeque<Card> contents = new ArrayDeque<>();
     private int deckNumber;
 
     /**
@@ -24,7 +24,7 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * Take a card from the top of the pile.
      * @return the top card
      */
-    public CardGame.Card takeCard() {
+    public Card takeCard() {
         return contents.remove();
     }
 
@@ -32,7 +32,7 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * Put a card at the bottom of the pile.
      * @param card card to place at the bottom
      */
-    public synchronized void addCard(CardGame.Card card) {
+    public synchronized void addCard(Card card) {
         contents.add(card);
         //notify the player who may be waiting to take from this deck
         notify();
@@ -46,7 +46,7 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
         try {
             myWriter = new FileWriter("deck" + deckNumber + "_output.txt");
             String line = "deck" + deckNumber + " content";
-            for (CardGame.Card card : contents) {
+            for (Card card : contents) {
                 line += " " + card.getNumber();
             }
             myWriter.write(line);
@@ -74,7 +74,7 @@ public class CardDeck implements CardDeckInterface, CardReceiver {
      * Adds a card to the bottom of the deck.
      * @param card card to add
      */
-    public void appendCard(CardGame.Card card) {
+    public void appendCard(Card card) {
         contents.add(card);
     }
 

@@ -9,13 +9,13 @@ public interface CardDeckInterface {
      * Card is popped off top of card deck and returned to caller.
      * @return card from top of deck
      */
-    CardGame.Card takeCard();
+    Card takeCard();
 
     /**
      *Card is added to the bottom of the deck by caller.
      * @param card card to add
      */
-    void addCard(CardGame.Card card);
+    void addCard(Card card);
 
     /**
      * Creates an output file which contains a line describing the decks contents.

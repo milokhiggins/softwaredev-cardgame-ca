@@ -5,20 +5,20 @@ import java.util.ArrayDeque;
 public class MockCardDeck implements CardDeckInterface {
 
     public int deckNumber;
-    public ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+    public ArrayDeque<Card> contents = new ArrayDeque<>();
 
     public MockCardDeck(int num) {
         this.deckNumber = num;
     }
 
     @Override
-    public CardGame.Card takeCard() {
+    public Card takeCard() {
         return contents.remove();
     }
 
 
     @Override
-    public synchronized void addCard(CardGame.Card card) {
+    public synchronized void addCard(Card card) {
         contents.add(card);
         notify();
     }

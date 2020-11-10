@@ -27,9 +27,9 @@ public class CardGameTest {
         MockCardReceiver mockReceiverA = new MockCardReceiver();
         MockCardReceiver mockReceiverB = new MockCardReceiver();
         MockCardReceiver[] receivers = {mockReceiverA, mockReceiverB};
-        CardGame.Card[] pack = new CardGame.Card[8];
+        Card[] pack = new Card[8];
         for (int i = 0; i < 8; i++) {
-            pack[i] = new CardGame.Card(i+1);
+            pack[i] = new Card(i+1);
         }
 
         invokeMethod(new CardGame(), "roundRobinDeal", receivers, pack);
@@ -41,8 +41,8 @@ public class CardGameTest {
         int[] valuesA = {1, 3, 5, 7};
 
         for(int i = 0; i < 4; i++) {
-            receiverACards[i] = new CardGame.Card(valuesA[i]);
-            receiverBCards[i] = new CardGame.Card(valuesB[i]);
+            receiverACards[i] = new Card(valuesA[i]);
+            receiverBCards[i] = new Card(valuesB[i]);
         }
 
         assertArrayEquals(receiverACards, mockReceiverA.cardList);
@@ -212,9 +212,9 @@ public class CardGameTest {
             packContents[i] = Integer.toString(random.nextInt(99)+1);
         }
         String cardPackPath = createTempPackFile(packContents);
-        CardGame.Card[] expectedPack = new CardGame.Card[24];
+        Card[] expectedPack = new Card[24];
         for (int i=0; i<24; i++){
-            expectedPack[i] = new CardGame.Card(Integer.parseInt(packContents[i]));
+            expectedPack[i] = new Card(Integer.parseInt(packContents[i]));
         }
 
         Method getPack = getMethodByName(CardGame.class,"validPackFile");
@@ -224,7 +224,7 @@ public class CardGameTest {
         //check that the output pack
         Field pack = game.getClass().getDeclaredField("pack");
         pack.setAccessible(true);
-        CardGame.Card[] actualPack = (CardGame.Card[]) pack.get(game);
+        Card[] actualPack = (Card[]) pack.get(game);
         assertArrayEquals(expectedPack, actualPack);
 
     }

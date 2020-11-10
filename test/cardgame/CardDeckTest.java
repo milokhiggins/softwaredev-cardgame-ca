@@ -30,23 +30,23 @@ public class CardDeckTest {
         Field deckContentsField = CardDeck.class.getDeclaredField("contents");
         deckContentsField.setAccessible(true);
 
-        ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
-        CardGame.Card card1 = new CardGame.Card(1);
-        CardGame.Card card2 = new CardGame.Card(2);
-        CardGame.Card card3 = new CardGame.Card(3);
+        ArrayDeque<Card> contents = new ArrayDeque<>();
+        Card card1 = new Card(1);
+        Card card2 = new Card(2);
+        Card card3 = new Card(3);
         contents.add(card1);
         contents.add(card2);
         contents.add(card3);
 
         deckContentsField.set(cardDeck, contents);
 
-        CardGame.Card returnCard1 = cardDeck.takeCard();
+        Card returnCard1 = cardDeck.takeCard();
         assertSame(card1, returnCard1);
 
-        CardGame.Card returnCard2 = cardDeck.takeCard();
+        Card returnCard2 = cardDeck.takeCard();
         assertSame(card2, returnCard2);
 
-        CardGame.Card returnCard3 = cardDeck.takeCard();
+        Card returnCard3 = cardDeck.takeCard();
         assertSame(card3, returnCard3);
     }
 
@@ -58,24 +58,24 @@ public class CardDeckTest {
 
     @Test
     public void testAddCard() throws Exception {
-        CardGame.Card expectedCard1 = new CardGame.Card(7);
+        Card expectedCard1 = new Card(7);
         cardDeck.addCard(expectedCard1);
-        CardGame.Card expectedCard2 = new CardGame.Card(8);
+        Card expectedCard2 = new Card(8);
         cardDeck.addCard(expectedCard2);
-        CardGame.Card expectedCard3 = new CardGame.Card(9);
+        Card expectedCard3 = new Card(9);
         cardDeck.addCard(expectedCard3);
 
         Field deckContentsField = CardDeck.class.getDeclaredField("contents");
         deckContentsField.setAccessible(true);
 
-        ArrayDeque<CardGame.Card> deckContents = (ArrayDeque<CardGame.Card>) deckContentsField.get(cardDeck);
+        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) deckContentsField.get(cardDeck);
 
         int length = deckContents.size();
         assertEquals(3, length);
 
-        CardGame.Card actualCard1 = deckContents.remove();
-        CardGame.Card actualCard2 = deckContents.remove();
-        CardGame.Card actualCard3 = deckContents.remove();
+        Card actualCard1 = deckContents.remove();
+        Card actualCard2 = deckContents.remove();
+        Card actualCard3 = deckContents.remove();
 
         //check that the actual card matches the expected card; should be the *exact* same object
         assertSame(expectedCard1, actualCard1);
@@ -97,7 +97,7 @@ public class CardDeckTest {
             }
         });
 
-        Thread adderThread = new Thread(() -> personalDeck.addCard(new CardGame.Card(5000)));
+        Thread adderThread = new Thread(() -> personalDeck.addCard(new Card(5000)));
 
         waiterThread.setPriority(Thread.MAX_PRIORITY);
         waiterThread.start();
@@ -111,12 +111,12 @@ public class CardDeckTest {
 
     @Test
     public void testCreateOutputFile() throws Exception {
-        CardGame.Card card1 = new CardGame.Card(1);
-        CardGame.Card card2 = new CardGame.Card(2);
-        CardGame.Card card3 = new CardGame.Card(3);
-        CardGame.Card card4 = new CardGame.Card(4);
+        Card card1 = new Card(1);
+        Card card2 = new Card(2);
+        Card card3 = new Card(3);
+        Card card4 = new Card(4);
 
-        ArrayDeque<CardGame.Card> testContents =  new ArrayDeque<CardGame.Card> (Arrays.asList(card1, card2, card3, card4));
+        ArrayDeque<Card> testContents =  new ArrayDeque<Card> (Arrays.asList(card1, card2, card3, card4));
         Util.setField(cardDeck, "contents", testContents);
 
         Util.invokeMethod(cardDeck, "createOutputFile");
@@ -137,8 +137,8 @@ public class CardDeckTest {
         Field deckContentsField = CardDeck.class.getDeclaredField("contents");
         deckContentsField.setAccessible(true);
 
-        ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
-        contents.add(new CardGame.Card(1));
+        ArrayDeque<Card> contents = new ArrayDeque<>();
+        contents.add(new Card(1));
 
         deckContentsField.set(cardDeck, contents);
 
@@ -150,9 +150,9 @@ public class CardDeckTest {
         Field deckContentsField = CardDeck.class.getDeclaredField("contents");
         deckContentsField.setAccessible(true);
 
-        ArrayDeque<CardGame.Card> contents = new ArrayDeque<>();
+        ArrayDeque<Card> contents = new ArrayDeque<>();
         for (int i = 0; i < 12; i++ ){
-            contents.add(new CardGame.Card(i));
+            contents.add(new Card(i));
         }
         deckContentsField.set(cardDeck, contents);
         assertTrue(cardDeck.isNotEmpty());
@@ -165,24 +165,24 @@ public class CardDeckTest {
 
     @Test
     public void testAppendCard() throws Exception {
-        CardGame.Card expectedCard1 = new CardGame.Card(7);
+        Card expectedCard1 = new Card(7);
         cardDeck.appendCard(expectedCard1);
-        CardGame.Card expectedCard2 = new CardGame.Card(8);
+        Card expectedCard2 = new Card(8);
         cardDeck.appendCard(expectedCard2);
-        CardGame.Card expectedCard3 = new CardGame.Card(9);
+        Card expectedCard3 = new Card(9);
         cardDeck.appendCard(expectedCard3);
 
         Field deckContentsField = CardDeck.class.getDeclaredField("contents");
         deckContentsField.setAccessible(true);
 
-        ArrayDeque<CardGame.Card> deckContents = (ArrayDeque<CardGame.Card>) deckContentsField.get(cardDeck);
+        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) deckContentsField.get(cardDeck);
 
         int length = deckContents.size();
         assertEquals(3, length);
 
-        CardGame.Card actualCard1 = deckContents.remove();
-        CardGame.Card actualCard2 = deckContents.remove();
-        CardGame.Card actualCard3 = deckContents.remove();
+        Card actualCard1 = deckContents.remove();
+        Card actualCard2 = deckContents.remove();
+        Card actualCard3 = deckContents.remove();
 
         //check that the actual card matches the expected card; should be the *exact* same object
         assertSame(expectedCard1, actualCard1);

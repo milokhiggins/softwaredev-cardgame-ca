@@ -7,14 +7,14 @@ package cardgame;
  */
 public class MockCardReceiver implements CardReceiver {
 
-    public CardGame.Card[] cardList = new CardGame.Card[4];
+    public Card[] cardList = new Card[4];
     private int index = 0;
 
     /**
      * Add a card
      * @param card card to add
      */
-    public void appendCard(CardGame.Card card) {
+    public void appendCard(Card card) {
         cardList[index] = card;
         index++;
     }
