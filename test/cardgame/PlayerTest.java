@@ -27,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 public class PlayerTest {
 
     private Player player;
-    private CardGame game;
+    private GameRunner game;
     private MockCardDeck mockLeftDeck;
     private MockCardDeck mockRightDeck;
 
@@ -40,7 +40,7 @@ public class PlayerTest {
     public void setUp() throws IllegalAccessException, NoSuchFieldException {
         mockLeftDeck = new MockCardDeck(1);
         mockRightDeck = new MockCardDeck(2);
-        game = new CardGame();
+        game = new GameRunner();
         //prevent for each loop on game.decks throwing NullPointerException
         Util.setField(game, "decks", new CardDeck[]{new CardDeck(1)});
         player = new Player(1, game, mockLeftDeck, mockRightDeck);

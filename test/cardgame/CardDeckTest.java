@@ -104,6 +104,7 @@ public class CardDeckTest {
         Thread.sleep(100);
         adderThread.start();
 
+
         Thread.sleep(1000);
         //if adderThread has notified waiterThread, then waiterThread should finish and exit -> will not be alive
         assertFalse(waiterThread.isAlive());

@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Represents player
@@ -14,7 +13,7 @@ import java.util.Random;
  */
 public class Player implements Runnable, CardReceiver {
     private int playerNumber;
-    private CardGame game;
+    private GameRunner game;
     //Player's hand made up of two arrays:
     private ArrayList<Card> favouredHand = new ArrayList<>();
     private ArrayDeque<Card> unfavouredHand = new ArrayDeque<>();
@@ -28,11 +27,11 @@ public class Player implements Runnable, CardReceiver {
     /**
      * Constructs a player with the given number, left deck and right deck.
      * @param number    player number
-     * @param game      CardGame instance player is associated with
+     * @param game      GameRunner instance player is associated with
      * @param leftDeck  deck to the left of the player
      * @param rightDeck deck to the right of the player
      */
-    public Player(int number, CardGame game, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
+    public Player(int number, GameRunner game, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.playerNumber = number;
