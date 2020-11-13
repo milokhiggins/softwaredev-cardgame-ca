@@ -27,18 +27,13 @@ public class CardDeckTest {
 
     @Test
     public void testTakeCard() throws Exception {
-        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
-        deckContentsField.setAccessible(true);
 
-        ArrayDeque<Card> contents = new ArrayDeque<>();
         Card card1 = new Card(1);
         Card card2 = new Card(2);
         Card card3 = new Card(3);
-        contents.add(card1);
-        contents.add(card2);
-        contents.add(card3);
+        ArrayDeque<Card> contents = new ArrayDeque<>(Arrays.asList(card1, card2, card3));
 
-        deckContentsField.set(cardDeck, contents);
+        Util.setField(cardDeck, "contents", contents);
 
         Card returnCard1 = cardDeck.takeCard();
         assertSame(card1, returnCard1);
@@ -65,10 +60,7 @@ public class CardDeckTest {
         Card expectedCard3 = new Card(9);
         cardDeck.addCard(expectedCard3);
 
-        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
-        deckContentsField.setAccessible(true);
-
-        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) deckContentsField.get(cardDeck);
+        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) Util.getFieldByName(cardDeck, "contents");
 
         int length = deckContents.size();
         assertEquals(3, length);
@@ -135,27 +127,23 @@ public class CardDeckTest {
 
     @Test
     public void testIsNotEmptyTrue() throws Exception {
-        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
-        deckContentsField.setAccessible(true);
 
         ArrayDeque<Card> contents = new ArrayDeque<>();
         contents.add(new Card(1));
 
-        deckContentsField.set(cardDeck, contents);
+        Util.setField(cardDeck, "contents", contents);
 
         assertTrue(cardDeck.isNotEmpty());
     }
 
     @Test
     public void testIsNotEmptyMultipleCardsTrue() throws Exception {
-        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
-        deckContentsField.setAccessible(true);
 
         ArrayDeque<Card> contents = new ArrayDeque<>();
         for (int i = 0; i < 12; i++ ){
             contents.add(new Card(i));
         }
-        deckContentsField.set(cardDeck, contents);
+        Util.setField(cardDeck, "contents", contents);
         assertTrue(cardDeck.isNotEmpty());
     }
 
@@ -173,10 +161,7 @@ public class CardDeckTest {
         Card expectedCard3 = new Card(9);
         cardDeck.appendCard(expectedCard3);
 
-        Field deckContentsField = CardDeck.class.getDeclaredField("contents");
-        deckContentsField.setAccessible(true);
-
-        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) deckContentsField.get(cardDeck);
+        ArrayDeque<Card> deckContents = (ArrayDeque<Card>) Util.getFieldByName(cardDeck, "contents");
 
         int length = deckContents.size();
         assertEquals(3, length);
