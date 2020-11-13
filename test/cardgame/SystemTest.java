@@ -15,7 +15,7 @@ public class SystemTest {
         String winner;
         for (int i = 0; i < 100; i++) {
             winner = testEverything();
-            if (winner.equals("2")) {
+            if (winner.equals("1")) {
                 normalWins++;
             }
         }
@@ -28,7 +28,7 @@ public class SystemTest {
 
     public String testEverything() throws Exception {
 
-        InputStream mockIn = MockSystemIO.makeMockInputStream(new String[]{"2\n","testPack1.txt\n"});
+        InputStream mockIn = MockSystemIO.makeMockInputStream(new String[]{"2\n","test\\cardgame\\testPack1.txt\n"});
         ByteArrayOutputStream mockOut = new ByteArrayOutputStream();
         PrintStream mockPrintOut = new PrintStream(mockOut);
 
@@ -45,7 +45,6 @@ public class SystemTest {
             System.setIn(systemIn);
             System.setOut(systemOut);
         }
-        String newline = System.lineSeparator();
         String consoleOutput = mockOut.toString();
 
         return consoleOutput.substring(86,87);

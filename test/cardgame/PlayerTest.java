@@ -57,7 +57,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHaFndWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
+    public void testRunStartHandWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new Card(3));
         }
