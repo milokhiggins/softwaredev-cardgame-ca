@@ -191,7 +191,7 @@ public class Player implements Runnable, CardReceiver {
      * hand.
      * @return true if player has won the game, false otherwise.
      */
-    private Boolean checkIfWon() {
+    private boolean checkIfWon() {
         if (favouredHand.size() == 4){
             // Only cards of the same value are in the favoured hand.
             // Having four cards in the favoured list must be a winning hand.
