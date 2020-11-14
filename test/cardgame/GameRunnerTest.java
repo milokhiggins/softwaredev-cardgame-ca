@@ -240,8 +240,9 @@ public class GameRunnerTest {
         GameRunner game = makeGameAndSetNumPlayers(3);
 
         String[] packContents = new String[24];
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < 24; i+=2) {
             packContents[i] = "-2";
+            packContents[i+1] = "0";
         }
         String cardPackPath = createTempPackFile(packContents);
 
