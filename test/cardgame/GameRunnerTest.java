@@ -18,6 +18,39 @@ import static org.junit.Assert.assertSame;
 public class GameRunnerTest {
 
     @Test
+    public void testGetWinner() throws Exception {
+        GameRunner game = new GameRunner();
+        Util.setField(game,"winner", new AtomicInteger(55));
+        assertEquals(55, game.getWinner());
+    }
+
+    @Test
+    public void testSetWinnerSuccess() throws Exception {
+        GameRunner game = new GameRunner();
+        Util.setField(game, "winner", new AtomicInteger(6));
+
+        //compare and set should succeed
+        assertTrue(game.compareAndSetWinner(6,7));
+        AtomicInteger winner = (AtomicInteger) Util.getFieldByName(game, "winner");
+        int value = winner.get();
+        //check value has been set
+        assertEquals(7, value);
+    }
+
+    @Test
+    public void testSetWinnerFail() throws Exception {
+        GameRunner game = new GameRunner();
+        Util.setField(game, "winner", new AtomicInteger(6));
+
+        //compare and set should fail
+        assertFalse(game.compareAndSetWinner(3,7));
+        AtomicInteger winner = (AtomicInteger) Util.getFieldByName(game, "winner");
+        int value = winner.get();
+        //check value has NOT been set
+        assertEquals(6, value);
+    }
+
+    @Test
     public void testRoundRobinDealDecks() throws Exception {
 
         MockCardReceiver mockReceiverA = new MockCardReceiver();
