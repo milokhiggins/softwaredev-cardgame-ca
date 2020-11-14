@@ -18,7 +18,8 @@ import static org.junit.Assert.*;
 
 
 public class CardDeckTest {
-    CardDeck cardDeck;
+
+    private CardDeck cardDeck;
 
     @Before
     public void setUp() {
