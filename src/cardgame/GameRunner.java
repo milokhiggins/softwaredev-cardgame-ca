@@ -13,15 +13,33 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @version 1.1
  */
-public class GameRunner {
+public class GameRunner implements GameRunnerInterface {
 
     private int numberOfPlayers;
     private Card[] pack;
     private Player[] players;
     private CardDeck[] decks;
     // Once a player wins, contains the number belonging to the player who has won
-    public AtomicInteger winner =  new AtomicInteger(0);
+    private AtomicInteger winner =  new AtomicInteger(0);
     private Thread[] playerThreads;
+
+    /**
+     * Get the value of the flag which indicates which player (if any) has won
+     * @return value of winner flag
+     */
+    public int getWinner() {
+        return winner.get();
+    }
+
+    /**
+     * Set the winner flag only if it is equal to a given value.
+     * @param expected  value to compare against
+     * @param value     value to set the flag too
+     * @return true if the value was set; flag otherwise
+     */
+    public boolean compareAndSetWinner(int expected, int value) {
+        return winner.compareAndSet(expected, value);
+    }
 
     /**
      * Gets the number of players from the user.

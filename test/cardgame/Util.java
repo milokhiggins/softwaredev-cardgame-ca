@@ -6,29 +6,33 @@ import java.lang.reflect.Method;
 
 public class Util {
 
-    public static Method getMethodByName(Class clazz, String name) {
+    public static Method getMethodByName(Class clazz, String name)
+            throws NoSuchMethodException {
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals(name)) {
                 return method;
             }
         }
-        return null;
+        throw new NoSuchMethodException("no such method");
     }
 
-    public static Object getFieldByName(Object instance, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public static Object getFieldByName(Object instance, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException {
         Field field = instance.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         return field.get(instance);
     }
 
-    public static void setField(Object instance, String fieldName, Object value) throws IllegalAccessException, NoSuchFieldException {
+    public static void setField(Object instance, String fieldName, Object value)
+            throws IllegalAccessException, NoSuchFieldException {
         Field field = instance.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(instance, value);
     }
 
-    public static Object invokeMethod(Object object, String methodName, Object... args) throws InvocationTargetException, IllegalAccessException {
+    public static Object invokeMethod(Object object, String methodName, Object... args)
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Method method = getMethodByName(object.getClass(), methodName);
         method.setAccessible(true);
         return method.invoke(object, args);

@@ -15,7 +15,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 public class PlayerTest {
 
     private Player player;
-    private GameRunner game;
+    private MockGameRunner game;
     private MockCardDeck mockLeftDeck;
     private MockCardDeck mockRightDeck;
 
@@ -37,12 +36,12 @@ public class PlayerTest {
         }
     }
     @Before
-    public void setUp() throws IllegalAccessException, NoSuchFieldException {
+    public void setUp() {
         mockLeftDeck = new MockCardDeck(1);
         mockRightDeck = new MockCardDeck(2);
-        game = new GameRunner();
+        game = new MockGameRunner();
         //prevent for each loop on game.decks throwing NullPointerException
-        Util.setField(game, "decks", new CardDeck[]{new CardDeck(1)});
+        game.decks = new CardDeck[]{new CardDeck(1)};
         player = new Player(1, game, mockLeftDeck, mockRightDeck);
     }
 
@@ -57,11 +56,10 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHandWinUnfavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
+    public void testRunStartHandWinUnfavoured() throws AssertionError {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new Card(3));
         }
-        Util.setField(game, "decks", new CardDeck[0]);
         player.run();
         //assert that the player has set the winner attribute to their own value
         assertEquals(1, game.winner.get());
@@ -69,11 +67,11 @@ public class PlayerTest {
     }
 
     @Test
-    public void testRunStartHandWinFavoured() throws AssertionError, NoSuchFieldException, IllegalAccessException {
+    public void testRunStartHandWinFavoured() throws AssertionError {
         for (int i = 0; i < 4; i++) {
             player.appendCard(new Card(1));
         }
-        Util.setField(game, "decks", new CardDeck[0]);
+
         player.run();
         //assert that the player has set the winner attribute to their own value
         assertEquals(1, game.winner.get());
@@ -294,7 +292,6 @@ public class PlayerTest {
 
     @Test
     public void testWinAndExit() throws Exception {
-        Util.setField(game, "decks", new CardDeck[0]);
         Util.invokeMethod(player, "winAndExit");
 
         boolean gameOver = (boolean) Util.getFieldByName(player, "gameOver");

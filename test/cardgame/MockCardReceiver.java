@@ -2,7 +2,6 @@ package cardgame;
 
 /**
  * Mock implementation of CardReceiver
- * @author SN690024245 & SN680046138
  * @version 1.1
  */
 public class MockCardReceiver implements CardReceiver {

@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 import java.util.Random;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
@@ -16,8 +17,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertSame;
 
-import static cardgame.Util.getMethodByName;
-import static cardgame.Util.invokeMethod;
 
 public class GameRunnerTest {
 
@@ -32,7 +31,7 @@ public class GameRunnerTest {
             pack[i] = new Card(i+1);
         }
 
-        invokeMethod(new GameRunner(), "roundRobinDeal", receivers, pack);
+        Util.invokeMethod(new GameRunner(), "roundRobinDeal", receivers, pack);
 
         Object[] receiverACards = new Object[4];
         Object[] receiverBCards = new Object[4];
@@ -109,7 +108,7 @@ public class GameRunnerTest {
             PrintStream mockPrintOut = new PrintStream(mockOut);
             System.setOut(mockPrintOut);
 
-            Method testMethod = getMethodByName(GameRunner.class, method);
+            Method testMethod = Util.getMethodByName(GameRunner.class, method);
             testMethod.setAccessible(true);
 
             testMethod.invoke(game);
@@ -180,9 +179,7 @@ public class GameRunnerTest {
     private GameRunner makeGameAndSetNumPlayers(int num) throws IllegalAccessException, NoSuchFieldException {
         //set n using reflection
         GameRunner game = new GameRunner();
-        Field numberOfPlayers = game.getClass().getDeclaredField("numberOfPlayers");
-        numberOfPlayers.setAccessible(true);
-        numberOfPlayers.set(game, num);
+        Util.setField(game, "numberOfPlayers", num);
         return game;
     }
     @Test
@@ -200,14 +197,10 @@ public class GameRunnerTest {
             expectedPack[i] = new Card(Integer.parseInt(packContents[i]));
         }
 
-        Method getPack = getMethodByName(GameRunner.class,"validPackFile");
-        getPack.setAccessible(true);
-        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+        boolean result = (boolean) Util.invokeMethod(game, "validPackFile", cardPackPath);
         assertTrue(result);
         //check that the output pack
-        Field pack = game.getClass().getDeclaredField("pack");
-        pack.setAccessible(true);
-        Card[] actualPack = (Card[]) pack.get(game);
+        Card[] actualPack = (Card[]) Util.getFieldByName(game, "pack");
         assertArrayEquals(expectedPack, actualPack);
 
     }
@@ -223,9 +216,7 @@ public class GameRunnerTest {
         }
         String cardPackPath = createTempPackFile(packContents);
 
-        Method getPack = getMethodByName(GameRunner.class,"validPackFile");
-        getPack.setAccessible(true);
-        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+        boolean result = (boolean) Util.invokeMethod(game, "validPackFile", cardPackPath);
 
         //not valid pack. should return false
         assertFalse(result);
@@ -241,9 +232,7 @@ public class GameRunnerTest {
         }
         String cardPackPath = createTempPackFile(packContents);
 
-        Method getPack = getMethodByName(GameRunner.class,"validPackFile");
-        getPack.setAccessible(true);
-        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+        boolean result = (boolean) Util.invokeMethod(game, "validPackFile", cardPackPath);
 
         //not valid pack. should return false
         assertFalse(result);
@@ -259,9 +248,7 @@ public class GameRunnerTest {
         }
         String cardPackPath = createTempPackFile(packContents);
 
-        Method getPack = getMethodByName(GameRunner.class,"validPackFile");
-        getPack.setAccessible(true);
-        boolean result = (boolean) getPack.invoke(game, cardPackPath);
+        boolean result = (boolean) Util.invokeMethod(game, "validPackFile", cardPackPath);
 
         //not valid pack. should return false
         assertFalse(result);
@@ -295,7 +282,7 @@ public class GameRunnerTest {
         //yield and wait for a little while to ensure player threads have reached wait point
         Thread.sleep(100);
         //set the winner so the player threads exit
-        game.winner.set(3);
+        Util.setField(game, "winner", new AtomicInteger(3));
         Thread.sleep(100);
         game.notifyAllPlayers();
         //sleep again just to be certain all the player threads were notified

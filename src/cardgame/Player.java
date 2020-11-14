@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Player implements Runnable, CardReceiver {
     private int playerNumber;
-    private GameRunner game;
+    private GameRunnerInterface game;
     //Player's hand made up of two arrays:
     private ArrayList<Card> favouredHand = new ArrayList<>();
     private ArrayDeque<Card> unfavouredHand = new ArrayDeque<>();
@@ -31,7 +31,7 @@ public class Player implements Runnable, CardReceiver {
      * @param leftDeck  deck to the left of the player
      * @param rightDeck deck to the right of the player
      */
-    public Player(int number, GameRunner game, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
+    public Player(int number, GameRunnerInterface game, CardDeckInterface leftDeck, CardDeckInterface rightDeck) {
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.playerNumber = number;
@@ -53,7 +53,7 @@ public class Player implements Runnable, CardReceiver {
             if (checkIfWon()){
                 //Checks if the atomic winner is set to 0. if it is sets to player's number to win the game.
                 // Returns False if winner variable is no longer 0.
-                boolean success = game.winner.compareAndSet(0, playerNumber);
+                boolean success = game.compareAndSetWinner(0, playerNumber);
                 if (success){
                     winAndExit();
                 }else{
@@ -62,7 +62,7 @@ public class Player implements Runnable, CardReceiver {
                 //Ends the thread
                 break;
             //checks if player has lost to another player
-            } else if(game.winner.get() != 0){
+            } else if(game.getWinner() != 0){
                 loseAndExit();
                 break;
             }
@@ -139,8 +139,9 @@ public class Player implements Runnable, CardReceiver {
     private void loseAndExit() {
         gameOver = true;
         //Gets winner player's number and adds to log.
+        int winner = game.getWinner();
         log.add(String.format("Player %d has informed player %d that player %d has won",
-                              game.winner.get(), playerNumber, game.winner.get()));
+                              winner, playerNumber, winner));
         log.add(String.format("Player %d Exits\nPlayer %d final hand %s",
                               playerNumber, playerNumber, handToString()));
         createLog();
