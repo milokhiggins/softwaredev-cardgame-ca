@@ -181,16 +181,10 @@ public class GameRunner implements GameRunnerInterface {
     private boolean validPackFile(String filename) throws IOException {
         //sets the pack array size to the number of needed cards
         pack = new Card[8*numberOfPlayers];
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
-            //this can only happen if the the file was deleted
-            System.exit(-1);
-        }
 
         int index = 0;
-        try {
+        try (BufferedReader reader
+                     = new BufferedReader(new FileReader(filename))){
             // While loop condition turns false when needed number of cards have been input.
             //so that too many cards are never added the game's deck.
             while (index < (8 * numberOfPlayers)) {
@@ -204,29 +198,16 @@ public class GameRunner implements GameRunnerInterface {
                         value = Integer.parseInt(line);
                     } catch (NumberFormatException e) {
                         //value is not a number; pack is invalid
-                        try {
-                            reader.close();
-                        } catch (IOException ioe) { }
                         return false;
                     }
                     if (value > 0) {
                         pack[index] = new Card(value);
                     } else {
                         //negative/zero value integer; pack is invalid
-                        try {
-                            reader.close();
-                        } catch (IOException ioe) { }
                         return false;
                     }
                 }
                 index++;
-            }
-
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                //ignore exception on close
             }
         }
         //if index is not 8n then the pack file had too few values and the pack is not valid.
